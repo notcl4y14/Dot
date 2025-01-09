@@ -13,7 +13,7 @@ public class CellChunkBase {
 		this.cells = new Cell[this.area];
 	}
 
-	// ==== Cells ==== //
+	// ======== Cells ======== //
 	public Cell getCell (int x, int y) {
 		return this.getCell(y * width + x);
 	}
@@ -30,11 +30,21 @@ public class CellChunkBase {
 		this.cells[index] = cell;
 	}
 
+	// ================================ //
+
 	public void swapCells (int srcX, int srcY, int destX, int destY) {
 		Cell srcCell = this.getCell(srcX, srcY);
 		Cell destCell = this.getCell(destX, destY);
 
 		this.setCell(srcCell, destX, destY);
 		this.setCell(destCell, srcX, srcY);
+	}
+	
+	// ================================ //
+
+	public void fill (Cell cell) {
+		for (int i = 0; i < this.area; i++) {
+			this.setCell(cell.clone(), i);
+		}
 	}
 }

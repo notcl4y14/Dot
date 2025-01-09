@@ -12,6 +12,7 @@ import dot.components.MouseInput;
 import dot.components.Runner;
 import dot.components.Window;
 import dot.controls.CellCursor;
+import dot.rendering.GraphicsInitializer;
 
 public class DotApp {
 	public Window window;
@@ -43,20 +44,19 @@ public class DotApp {
 		int worldHeight = DotOptions.CONTEXT_HEIGHT;
 
 		cellChunk = new CellChunk(worldWidth, worldHeight);
-
-		for (int i = 0; i < cellChunk.area; i++) {
-			cellChunk.setCell(new CellAir(), i);
-		}
+		cellChunk.fill(new CellAir());
 
 		cellCursor = new CellCursor();
-		cellCursor.chunk = cellChunk;
-		cellCursor.primCell = new CellSand();
-		cellCursor.altCell = new CellAir();
-		cellCursor.radius = 9;
+		cellCursor.setChunk(cellChunk);
+		cellCursor.setPrimaryCell(new CellSand());
+		cellCursor.setAlternativeCell(new CellAir());
+		cellCursor.setRadius(9);
 
 		// ==== Starting the Game ==== //
 		runner.start();
 	}
+
+	// ================================ //
 
 	public void loop () {
 		update();
@@ -64,56 +64,57 @@ public class DotApp {
 	}
 
 	public void update () {
+		// Cell World
 		if (runner.loopCount % 2 == 0)
 			cellChunk.update();
 		
+		// Cell Cursor
 		cellCursor.x = (int) DotInput.mouseX / DotOptions.CONTEXT_SCALE;
 		cellCursor.y = (int) DotInput.mouseY / DotOptions.CONTEXT_SCALE;
 
-		if (DotInput.isMouseDown(1)) {
-			cellCursor.fillPrim();
+		if (DotInput.isMouseDown(DotInput.MOUSE_LEFT)) {
+			cellCursor.fillPrimaryCell();
 		}
 
-		if (DotInput.isMouseDown(3)) {
-			cellCursor.fillAlt();
+		if (DotInput.isMouseDown(DotInput.MOUSE_RIGHT)) {
+			cellCursor.fillAlternativeCell();
 		}
 	}
 
 	public void draw () {
-		Graphics2D graphics = (Graphics2D) display.getGraphics();
-		Graphics2D graphicsOver = (Graphics2D) display.getGraphics();
+		Graphics2D g1 = (Graphics2D) display.getGraphics();
+		Graphics2D g2 = (Graphics2D) display.getGraphics();
+
+		// g1.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		// g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		GraphicsInitializer.apply(g1);
+		GraphicsInitializer.apply(g2);
 
 		AffineTransform scale = new AffineTransform();
 		scale.scale(DotOptions.CONTEXT_SCALE, DotOptions.CONTEXT_SCALE);
-		graphics.transform(scale);
 		
-		// graphics.setStroke( new BasicStroke(1 / DotOptions.CONTEXT_SCALE) );
+		g1.transform(scale);
 
 		// Clear Screen
-		graphicsOver.setColor(Color.BLACK);
-		graphicsOver.fillRect(0, 0, DotOptions.CONTEXT_WIDTH * DotOptions.CONTEXT_SCALE, DotOptions.CONTEXT_HEIGHT * DotOptions.CONTEXT_SCALE);
+		g2.setColor(Color.BLACK);
+		g2.fillRect(0, 0, DotOptions.CONTEXT_WIDTH * DotOptions.CONTEXT_SCALE, DotOptions.CONTEXT_HEIGHT * DotOptions.CONTEXT_SCALE);
 
 		// Draw Game Components
-		cellChunk.render(graphics);
+		cellChunk.render(g1);
 
-		graphics.setColor(new Color(1.0f, 1.0f, 1.0f, 0.25f));
-		graphics.fillArc(cellCursor.x - cellCursor.radius, cellCursor.y - cellCursor.radius, cellCursor.radius * 2, cellCursor.radius * 2, 0, 360);
+		g1.setColor(new Color(1.0f, 1.0f, 1.0f, 0.25f));
+		g1.fillArc(cellCursor.x - cellCursor.radius, cellCursor.y - cellCursor.radius, cellCursor.radius * 2, cellCursor.radius * 2, 0, 360);
 
 		// Draw FPS
-		graphicsOver.setColor(new Color(0.0f, 0.0f, 0.0f, 0.75f));
-		graphicsOver.fillRect(0, 0, 100, 10);
+		g2.setColor(new Color(0.0f, 0.0f, 0.0f, 0.75f));
+		g2.fillRect(0, 0, 100, 10);
 
-		graphicsOver.setColor(Color.WHITE);
-		graphicsOver.drawString("FPS:" + runner.LPS, 0, 10);
-
-		// Draw Mouse Input
-		// graphicsOver.setColor(new Color(0.0f, 0.0f, 0.0f, 0.75f));
-		// graphicsOver.fillRect(0, 10, 100, 10);
-
-		// graphicsOver.setColor(Color.WHITE);
-		// graphicsOver.drawString(DotInput.isMouseDown(1) + " " + DotInput.isMouseDown(2) + " " + DotInput.isMouseDown(3), 0, 20);
+		g2.setColor(Color.WHITE);
+		g2.drawString("FPS:" + runner.LPS, 0, 10);
 
 		display.present();
-		graphics.dispose();
+		g1.dispose();
+		g2.dispose();
 	}
 }

@@ -14,28 +14,48 @@ public class CellCursor {
 	public Cell altCell;
 
 	public CellCursor () {
-		x = 0;
-		y = 0;
-		radius = 0;
+		this.x = 0;
+		this.y = 0;
+		this.radius = 0;
 
-		chunk = null;
-		primCell = null;
-		altCell = null;
+		this.chunk = null;
+		this.primCell = null;
+		this.altCell = null;
 	}
 
+	// ================================ //
+	
+	public void setChunk (CellChunk chunk) {
+		this.chunk = chunk;
+	}
+
+	public void setPrimaryCell (Cell cell) {
+		this.primCell = cell;
+	}
+
+	public void setAlternativeCell (Cell cell) {
+		this.altCell = cell;
+	}
+
+	public void setRadius (int radius) {
+		this.radius = radius;
+	}
+
+	// ================================ //
+	
 	public void fill (Cell cell) {
-		CellBrush.x = x;
-		CellBrush.y = y;
+		CellBrush.x = this.x;
+		CellBrush.y = this.y;
 		CellBrush.cell = cell;
-		CellBrush.chunk = chunk;
-		CellBrush.fillCircle(radius);
+		CellBrush.chunk = this.chunk;
+		CellBrush.fillCircle(this.radius);
 	}
 
-	public void fillPrim () {
-		fill(primCell);
+	public void fillPrimaryCell () {
+		this.fill(primCell);
 	}
 
-	public void fillAlt () {
-		fill(altCell);
+	public void fillAlternativeCell () {
+		this.fill(altCell);
 	}
 }

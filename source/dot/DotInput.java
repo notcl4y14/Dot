@@ -9,6 +9,10 @@ public class DotInput {
 	public static double mouseX = 0;
 	public static double mouseY = 0;
 
+	public static int MOUSE_LEFT = 1;
+	public static int MOUSE_MIDDLE = 2;
+	public static int MOUSE_RIGHT = 3;
+
 	public static boolean isKeyDown (int key) {
 		try {
 			return keys.get(key);

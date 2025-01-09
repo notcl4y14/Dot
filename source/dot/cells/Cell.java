@@ -34,7 +34,9 @@ public class Cell implements Cloneable {
 		}
 	}
 
-	public void update (CellChunk chunk, int x, int y) {}
+	public void update (CellChunk chunk, int x, int y) {
+		return;
+	}
 
 	public boolean canPass (Cell cell) {
 		return false;

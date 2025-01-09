@@ -1,6 +1,5 @@
 package dot.cells;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 
 public class CellChunk extends CellChunkBase {
@@ -31,9 +30,7 @@ public class CellChunk extends CellChunkBase {
 			int x = i % this.width;
 			int y = i / this.width;
 			
-			// Color color = (x + y) % 2 == 0 ? new Color(0.25f, 0.25f, 0.25f, 1.0f) : new Color(0.75f, 0.75f, 0.75f, 1.0f);
-			Color color = cell.color;
-			graphics.setColor(color);
+			graphics.setColor(cell.color);
 			graphics.fillRect(x, y, 1, 1);
 		}
 	}

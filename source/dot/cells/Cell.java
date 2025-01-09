@@ -2,7 +2,7 @@ package dot.cells;
 
 import java.awt.Color;
 
-public class Cell {
+public class Cell implements Cloneable {
 	public String ID;
 	public Color color;
 
@@ -23,6 +23,15 @@ public class Cell {
 		this.isSolid  = false;
 		this.isPowder = false;
 		this.isFluid  = false;
+	}
+
+	public Cell clone () {
+		try {
+			return (Cell) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public void update (CellChunk chunk, int x, int y) {}

@@ -7,10 +7,11 @@ import java.awt.geom.AffineTransform;
 import dot.cells.CellChunk;
 import dot.cells.cells.CellAir;
 import dot.cells.cells.CellSand;
-import dot.cells.cells.CellStone;
 import dot.components.Display;
+import dot.components.MouseInput;
 import dot.components.Runner;
 import dot.components.Window;
+import dot.controls.CellCursor;
 
 public class DotApp {
 	public Window window;
@@ -18,6 +19,7 @@ public class DotApp {
 	public Runner runner;
 
 	public CellChunk cellChunk;
+	public CellCursor cellCursor;
 
 	public DotApp () {
 		int windowWidth = DotOptions.CONTEXT_WIDTH * DotOptions.CONTEXT_SCALE;
@@ -30,6 +32,8 @@ public class DotApp {
 
 		display = new Display();
 		display.create(window);
+		display.addMouseListener(new MouseInput());
+		display.addMouseMotionListener(new MouseInput());
 
 		runner = new Runner(this);
 		runner.looprate = 120;
@@ -44,15 +48,11 @@ public class DotApp {
 			cellChunk.setCell(new CellAir(), i);
 		}
 
-		for (int i = 50; i < 100; i++) {
-			for (int j = 0; j < 10; j++)
-				cellChunk.setCell(new CellSand(), i, j);
-		}
-
-		for (int i = 0; i < cellChunk.width; i++) {
-			if (i % 2 == 0) continue;
-			cellChunk.setCell(new CellStone(), i, 100);
-		}
+		cellCursor = new CellCursor();
+		cellCursor.chunk = cellChunk;
+		cellCursor.primCell = new CellSand();
+		cellCursor.altCell = new CellAir();
+		cellCursor.radius = 9;
 
 		// ==== Starting the Game ==== //
 		runner.start();
@@ -66,6 +66,17 @@ public class DotApp {
 	public void update () {
 		if (runner.loopCount % 2 == 0)
 			cellChunk.update();
+		
+		cellCursor.x = (int) DotInput.mouseX / DotOptions.CONTEXT_SCALE;
+		cellCursor.y = (int) DotInput.mouseY / DotOptions.CONTEXT_SCALE;
+
+		if (DotInput.isMouseDown(1)) {
+			cellCursor.fillPrim();
+		}
+
+		if (DotInput.isMouseDown(3)) {
+			cellCursor.fillAlt();
+		}
 	}
 
 	public void draw () {
@@ -75,6 +86,8 @@ public class DotApp {
 		AffineTransform scale = new AffineTransform();
 		scale.scale(DotOptions.CONTEXT_SCALE, DotOptions.CONTEXT_SCALE);
 		graphics.transform(scale);
+		
+		// graphics.setStroke( new BasicStroke(1 / DotOptions.CONTEXT_SCALE) );
 
 		// Clear Screen
 		graphicsOver.setColor(Color.BLACK);
@@ -83,12 +96,22 @@ public class DotApp {
 		// Draw Game Components
 		cellChunk.render(graphics);
 
+		graphics.setColor(new Color(1.0f, 1.0f, 1.0f, 0.25f));
+		graphics.fillArc(cellCursor.x - cellCursor.radius, cellCursor.y - cellCursor.radius, cellCursor.radius * 2, cellCursor.radius * 2, 0, 360);
+
 		// Draw FPS
 		graphicsOver.setColor(new Color(0.0f, 0.0f, 0.0f, 0.75f));
 		graphicsOver.fillRect(0, 0, 100, 10);
 
 		graphicsOver.setColor(Color.WHITE);
 		graphicsOver.drawString("FPS:" + runner.LPS, 0, 10);
+
+		// Draw Mouse Input
+		// graphicsOver.setColor(new Color(0.0f, 0.0f, 0.0f, 0.75f));
+		// graphicsOver.fillRect(0, 10, 100, 10);
+
+		// graphicsOver.setColor(Color.WHITE);
+		// graphicsOver.drawString(DotInput.isMouseDown(1) + " " + DotInput.isMouseDown(2) + " " + DotInput.isMouseDown(3), 0, 20);
 
 		display.present();
 		graphics.dispose();

@@ -7,6 +7,7 @@ import java.awt.geom.AffineTransform;
 import dot.cells.CellChunk;
 import dot.cells.cells.CellAir;
 import dot.cells.cells.CellSand;
+import dot.cells.cells.CellStone;
 import dot.components.Display;
 import dot.components.Runner;
 import dot.components.Window;
@@ -43,8 +44,14 @@ public class DotApp {
 			cellChunk.setCell(new CellAir(), i);
 		}
 
-		for (int i = 0; i < 10; i++) {
-			cellChunk.setCell(new CellSand(), 10, i);
+		for (int i = 50; i < 100; i++) {
+			for (int j = 0; j < 10; j++)
+				cellChunk.setCell(new CellSand(), i, j);
+		}
+
+		for (int i = 0; i < cellChunk.width; i++) {
+			if (i % 2 == 0) continue;
+			cellChunk.setCell(new CellStone(), i, 100);
 		}
 
 		// ==== Starting the Game ==== //

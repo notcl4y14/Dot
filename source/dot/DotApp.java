@@ -7,6 +7,7 @@ import java.awt.geom.AffineTransform;
 import dot.cells.CellChunk;
 import dot.cells.cells.CellAir;
 import dot.cells.cells.CellSand;
+import dot.cells.cells.CellWater;
 import dot.components.Display;
 import dot.components.MouseInput;
 import dot.components.Runner;
@@ -48,7 +49,7 @@ public class DotApp {
 
 		cellCursor = new CellCursor();
 		cellCursor.setChunk(cellChunk);
-		cellCursor.setPrimaryCell(new CellSand());
+		cellCursor.setPrimaryCell(new CellWater());
 		cellCursor.setAlternativeCell(new CellAir());
 		cellCursor.setRadius(9);
 

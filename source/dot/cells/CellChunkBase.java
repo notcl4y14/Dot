@@ -13,7 +13,8 @@ public class CellChunkBase {
 		this.cells = new Cell[this.area];
 	}
 
-	// ======== Cells ======== //
+	// ======== Cell Management ======== //
+
 	public Cell getCell (int x, int y) {
 		return this.getCell(y * width + x);
 	}
@@ -30,7 +31,7 @@ public class CellChunkBase {
 		this.cells[index] = cell;
 	}
 
-	// ================================ //
+	// ======== Another Cell Management ======= //
 
 	public void swapCells (int srcX, int srcY, int destX, int destY) {
 		Cell srcCell = this.getCell(srcX, srcY);
@@ -40,7 +41,7 @@ public class CellChunkBase {
 		this.setCell(destCell, srcX, srcY);
 	}
 	
-	// ================================ //
+	// ======== Misc. ======== //
 
 	public void fill (Cell cell) {
 		for (int i = 0; i < this.area; i++) {

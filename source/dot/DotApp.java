@@ -49,7 +49,7 @@ public class DotApp {
 
 		cellCursor = new CellCursor();
 		cellCursor.setChunk(cellChunk);
-		cellCursor.setPrimaryCell(new CellWater());
+		cellCursor.setPrimaryCell(new CellSand());
 		cellCursor.setAlternativeCell(new CellAir());
 		cellCursor.setRadius(9);
 
@@ -80,6 +80,11 @@ public class DotApp {
 		if (DotInput.isMouseDown(DotInput.MOUSE_RIGHT)) {
 			cellCursor.fillAlternativeCell();
 		}
+
+		cellChunk.setCell(new CellWater(), 50);
+		cellChunk.setCell(new CellWater(), 51);
+		cellChunk.setCell(new CellWater(), 52);
+		cellChunk.setCell(new CellWater(), 53);
 	}
 
 	public void draw () {

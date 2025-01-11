@@ -36,6 +36,6 @@ public class CellPowder extends Cell {
 
 	public boolean canPass (Cell cell) {
 		return cell == null ? false :
-			cell.isEmpty;
+			cell.isEmpty || cell.isFluid;
 	}
 }

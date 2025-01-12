@@ -11,15 +11,17 @@ public class CellPowder extends Cell {
 	}
 
 	public void update (CellChunk chunk, int x, int y) {
-		if (y == chunk.height - 1)
-			return;
+		// if (y == chunk.height - 1) {
+		// 	this.turnIdle();
+		// 	return;
+		// }
 		
 		int vx = 0;
 		int vy = 0;
 		
-		Cell sCell = y == chunk.height - 1 ? null : chunk.getCell(x, y + 1);
-		Cell swCell = x == 0 ? null : chunk.getCell(x - 1, y + 1);
-		Cell seCell = x == chunk.width - 1 ? null : chunk.getCell(x + 1, y + 1);
+		Cell sCell =  y == chunk.height - 1                         ? null : chunk.getCell(x, y + 1);
+		Cell swCell = x == 0 || y == chunk.height - 1               ? null : chunk.getCell(x - 1, y + 1);
+		Cell seCell = x == chunk.width - 1 || y == chunk.height - 1 ? null : chunk.getCell(x + 1, y + 1);
 
 		if (this.canPass(sCell)) {
 			vx = 0;

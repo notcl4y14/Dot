@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-import dot.cells.CellChunk;
+import dot.cells.CellWorld;
 import dot.cells.cells.CellAir;
 import dot.cells.cells.CellSand;
 import dot.cells.cells.CellWater;
@@ -20,7 +20,7 @@ public class DotApp {
 	public Display display;
 	public Runner runner;
 
-	public CellChunk cellChunk;
+	public CellWorld cellChunk;
 	public CellCursor cellCursor;
 
 	public DotApp () {
@@ -44,7 +44,7 @@ public class DotApp {
 		int worldWidth = DotOptions.CONTEXT_WIDTH;
 		int worldHeight = DotOptions.CONTEXT_HEIGHT;
 
-		cellChunk = new CellChunk(worldWidth, worldHeight);
+		cellChunk = new CellWorld(worldWidth, worldHeight);
 		cellChunk.fill(new CellAir());
 
 		cellCursor = new CellCursor();
@@ -108,6 +108,7 @@ public class DotApp {
 
 		// Draw Game Components
 		cellChunk.render(g1);
+		cellChunk.renderAlive(g1);
 
 		g1.setColor(new Color(1.0f, 1.0f, 1.0f, 0.25f));
 		g1.fillArc(cellCursor.x - cellCursor.radius, cellCursor.y - cellCursor.radius, cellCursor.radius * 2, cellCursor.radius * 2, 0, 360);

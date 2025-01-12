@@ -2,6 +2,7 @@ package dot.cells.types;
 
 import dot.cells.Cell;
 import dot.cells.CellChunk;
+import dot.cells.CellWorld;
 
 public class CellFluid extends Cell {
 	public CellFluid (String ID) {
@@ -31,6 +32,12 @@ public class CellFluid extends Cell {
 		}
 
 		chunk.swapCells(x, y, x + vx, y + vy);
+
+		if (vx != 0 || vy != 0) {
+			this.turnAlive((CellWorld) chunk, x, y);
+		} else {
+			this.turnIdle();
+		}
 	}
 
 	public boolean canPass (Cell cell) {

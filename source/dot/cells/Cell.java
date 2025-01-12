@@ -14,6 +14,11 @@ public class Cell implements Cloneable {
 	public boolean isPowder;
 	public boolean isFluid;
 
+	public boolean alive;
+	public int aliveCount;
+
+	public static int aliveCountMax = 100;
+
 	public Cell (String ID) {
 		this.ID = ID;
 		this.color = null;
@@ -23,6 +28,8 @@ public class Cell implements Cloneable {
 		this.isSolid  = false;
 		this.isPowder = false;
 		this.isFluid  = false;
+		this.alive      = true;
+		this.aliveCount = 0;
 	}
 
 	public Cell clone () {
@@ -38,7 +45,25 @@ public class Cell implements Cloneable {
 		return;
 	}
 
+	public void turnAlive (CellWorld world, int x, int y) {
+		this.alive = true;
+		this.aliveCount = 0;
+		world.nextChunks(y * world.width + x);
+	}
+
+	public void turnIdle () {
+		if (this.aliveCount > Cell.aliveCountMax) {
+			this.alive = false;
+		} else {
+			this.aliveCount++;
+		}
+	}
+
 	public boolean canPass (Cell cell) {
 		return false;
+	}
+
+	public boolean getUpdatable () {
+		return this.shouldUpdate && this.alive;
 	}
 }

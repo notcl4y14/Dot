@@ -8,6 +8,7 @@ import java.awt.geom.AffineTransform;
 import dot.cells.CellWorld;
 import dot.cells.cells.CellAir;
 import dot.cells.cells.CellSand;
+import dot.cells.cells.CellSoil;
 import dot.cells.cells.CellStone;
 import dot.cells.cells.CellWater;
 import dot.components.Display;
@@ -80,6 +81,8 @@ public class DotApp {
 			cellCursor.setPrimaryCell(new CellStone());
 		} else if (DotInput.isKeyDown(KeyEvent.VK_3)) {
 			cellCursor.setPrimaryCell(new CellWater());
+		} else if (DotInput.isKeyDown(KeyEvent.VK_4)) {
+			cellCursor.setPrimaryCell(new CellSoil());
 		}
 		
 		cellCursor.x = (int) DotInput.mouseX / DotOptions.CONTEXT_SCALE;

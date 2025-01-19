@@ -18,6 +18,7 @@ import dot.components.MouseInput;
 import dot.components.Runner;
 import dot.components.Window;
 import dot.controls.CellCursor;
+import dot.entity.Entity;
 import dot.rendering.GraphicsInitializer;
 
 public class DotApp {
@@ -27,6 +28,7 @@ public class DotApp {
 
 	public CellWorld cellChunk;
 	public CellCursor cellCursor;
+	public Entity entity;
 
 	public DotApp () {
 		int windowWidth = DotOptions.CONTEXT_WIDTH * DotOptions.CONTEXT_SCALE;
@@ -58,6 +60,10 @@ public class DotApp {
 		cellCursor.setPrimaryCell(new CellSand());
 		cellCursor.setAlternativeCell(new CellAir());
 		cellCursor.setRadius(9);
+
+		entity = new Entity();
+		entity.width = 8;
+		entity.height = 16;
 
 		// ==== Starting the Game ==== //
 		runner.start();
@@ -99,10 +105,13 @@ public class DotApp {
 			cellCursor.fillAlternativeCell();
 		}
 
-		// cellChunk.setCell(new CellWater(), 50);
-		// cellChunk.setCell(new CellWater(), 51);
-		// cellChunk.setCell(new CellWater(), 52);
-		// cellChunk.setCell(new CellWater(), 53);
+		entity.update(cellChunk);
+
+		if (DotInput.isKeyDown(KeyEvent.VK_UP)) {
+			entity.velY = -1;
+		}
+
+		entity.applyVelocity();
 	}
 
 	public void draw () {
@@ -127,6 +136,9 @@ public class DotApp {
 		// Draw Game Components
 		cellChunk.render(g1);
 		// cellChunk.renderAlive(g1);
+
+		g1.setColor(Color.WHITE);
+		g1.fillRect((int)entity.x, (int)entity.y, entity.width, entity.height);
 
 		g1.setColor(new Color(1.0f, 1.0f, 1.0f, 0.25f));
 		g1.fillArc(cellCursor.x - cellCursor.radius, cellCursor.y - cellCursor.radius, cellCursor.radius * 2, cellCursor.radius * 2, 0, 360);

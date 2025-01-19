@@ -7,6 +7,32 @@ public class CellChunk extends CellChunkBase {
 		super(width, height);
 	}
 
+	public Cell[] getHorizontalCells (int x1, int x2, int y) {
+		int width = x2 - x1;
+
+		Cell[] cells = new Cell[width];
+
+		for (int i = 0; i < width; i++) {
+			Cell cell = this.getCell(x1 + i, y);
+			cells[i] = cell;
+		}
+
+		return cells;
+	}
+
+	public Cell[] getVerticalCells (int x, int y1, int y2) {
+		int height = y2 - y1;
+
+		Cell[] cells = new Cell[height];
+
+		for (int i = 0; i < height; i++) {
+			Cell cell = this.getCell(x, y1 + i);
+			cells[i] = cell;
+		}
+
+		return cells;
+	}
+
 	public void update () {
 		for (int x = 0; x < this.width; x++) {
 			for (int y = this.height - 1; y >= 0; y--) {

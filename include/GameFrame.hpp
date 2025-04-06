@@ -9,9 +9,6 @@ namespace Dot
 	{
 	private:
 		sf::RenderWindow window;
-		sf::Image canvas_img;
-		sf::Texture canvas_tex;
-		sf::Sprite canvas_spr;
 
 	public:
 		uint8_t isRunning;
@@ -22,11 +19,6 @@ namespace Dot
 		void CreateWindow (const char* title, uint32_t width, uint32_t height);
 		void CloseWindow ();
 		sf::RenderWindow* GetWindow ();
-
-		sf::Image* GetCanvasImage ();
-		sf::Texture* GetCanvasTexture ();
-		sf::Sprite* GetCanvasSprite ();
-		void ApplyCanvas ();
 
 		void Start ();
 		void Stop ();

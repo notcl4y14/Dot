@@ -11,7 +11,7 @@ out_dir  = out
 out_file = Dot
 
 # Source Parameters
-src_files = $(wildcard source/*.cpp)
+src_files = $(wildcard source/*.cpp source/cells/*.cpp)
 inc_dirs  = -I${inc_dir} -I${lib_dir}/include
 
 # Library Parameters

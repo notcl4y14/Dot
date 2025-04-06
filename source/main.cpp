@@ -1,5 +1,6 @@
 #include <main.hpp>
 #include <GameFrame.hpp>
+#include <cells/Cell.hpp>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -14,6 +15,8 @@ int32_t main (int32_t argc, char* argv[])
 	frameDot.Start();
 
 	sf::RenderWindow* window = frameDot.GetWindow();
+
+	Dot::cells::Cell cell(1, 0xffff00ff);
 
 	// sf::Event event;
 	while (frameDot.isRunning)
@@ -30,20 +33,15 @@ int32_t main (int32_t argc, char* argv[])
 		/* Update
 		 */
 
-		/* Render
-		 */
-
-		sf::Image* canvas_img = frameDot.GetCanvasImage();
-
-		// canvas_img->setPixel({0, 0}, sf::Color::White);
-
-		frameDot.ApplyCanvas();
-
 		/* Draw
 		 */
 
 		window->clear();
-		window->draw(*frameDot.GetCanvasSprite());
+		sf::RectangleShape rect;
+		rect.setPosition({10, 10});
+		rect.setSize({25, 25});
+		rect.setFillColor((sf::Color)cell.color);
+		window->draw(rect);
 		window->display();
 	}
 

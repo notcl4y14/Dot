@@ -1,10 +1,27 @@
 #include <main.hpp>
 
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+
 #include <iostream>
 
 int32_t main (int32_t argc, char* argv[])
 {
-	output_args(argc, argv);
+	sf::RenderWindow window(sf::VideoMode({800, 600}), "Dot");
+
+	// sf::Event event;
+	while (window.isOpen())
+	{
+		while (const std::optional event = window.pollEvent())
+		{
+			if (event->is<sf::Event::Closed>())
+				window.close();
+		}
+
+		window.clear();
+		window.display();
+	}
+
 	return 0;
 }
 

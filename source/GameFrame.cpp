@@ -4,6 +4,10 @@ Dot::GameFrame::GameFrame ()
 {
 	isRunning = false;
 	updateCount = 0;
+
+	// rtCellChunk.create();
+
+	rCellChunk.SetRenderTexture(&rtCellChunk);
 }
 
 // 
@@ -28,6 +32,8 @@ sf::RenderWindow* Dot::GameFrame::GetWindow ()
 void Dot::GameFrame::InitCellChunk (uint32_t width, uint32_t height)
 {
 	cellChunk.Init(width, height);
+	rCellChunk.cellChunk = &cellChunk;
+	rtCellChunk.resize({width, height});
 }
 
 void Dot::GameFrame::DeleteCellChunk ()
@@ -36,9 +42,16 @@ void Dot::GameFrame::DeleteCellChunk ()
 	return;
 }
 
-Dot::cells::CellChunk* Dot::GameFrame::GetCellChunk ()
+Dot::CellChunk* Dot::GameFrame::GetCellChunk ()
 {
 	return &cellChunk;
+}
+
+// 
+
+void Dot::GameFrame::DrawCellChunk ()
+{
+	rCellChunk.Render();
 }
 
 // 

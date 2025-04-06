@@ -3,7 +3,7 @@
 
 #include <defines.hpp>
 
-namespace Dot::cells
+namespace Dot
 {
 	class Cell
 	{

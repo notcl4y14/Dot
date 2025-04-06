@@ -15,6 +15,8 @@ int32_t main (int32_t argc, char* argv[])
 	frameDot.InitCellChunk(10, 10);
 	frameDot.Start();
 
+	frameDot.GetCellChunk()->SetCell(10, 10, Dot::Cell(1, 0xFFFF00FF));
+
 	sf::RenderWindow* window = frameDot.GetWindow();
 
 	// sf::Event event;
@@ -35,7 +37,12 @@ int32_t main (int32_t argc, char* argv[])
 		/* Draw
 		 */
 
+		frameDot.DrawCellChunk();
+
+		sf::Sprite sprite(frameDot.rtCellChunk.getTexture());
+
 		window->clear();
+		window->draw(sprite);
 		window->display();
 	}
 

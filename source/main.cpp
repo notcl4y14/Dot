@@ -12,11 +12,10 @@ Dot::GameFrame frameDot;
 int32_t main (int32_t argc, char* argv[])
 {
 	frameDot.CreateWindow("Dot", 800, 600);
+	frameDot.InitCellChunk(10, 10);
 	frameDot.Start();
 
 	sf::RenderWindow* window = frameDot.GetWindow();
-
-	Dot::cells::Cell cell(1, 0xffff00ff);
 
 	// sf::Event event;
 	while (frameDot.isRunning)
@@ -37,11 +36,6 @@ int32_t main (int32_t argc, char* argv[])
 		 */
 
 		window->clear();
-		sf::RectangleShape rect;
-		rect.setPosition({10, 10});
-		rect.setSize({25, 25});
-		rect.setFillColor((sf::Color)cell.color);
-		window->draw(rect);
 		window->display();
 	}
 

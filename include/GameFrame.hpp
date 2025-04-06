@@ -1,6 +1,8 @@
 #ifndef DOT_GAMEFRAME_HPP
 #define DOT_GAMEFRAME_HPP
 
+#include <cells/CellChunk.hpp>
+
 #include <SFML/Graphics.hpp>
 
 namespace Dot
@@ -9,6 +11,8 @@ namespace Dot
 	{
 	private:
 		sf::RenderWindow window;
+
+		Dot::cells::CellChunk cellChunk;
 
 	public:
 		uint8_t isRunning;
@@ -19,6 +23,10 @@ namespace Dot
 		void CreateWindow (const char* title, uint32_t width, uint32_t height);
 		void CloseWindow ();
 		sf::RenderWindow* GetWindow ();
+
+		void InitCellChunk (uint32_t width, uint32_t height);
+		void DeleteCellChunk ();
+		Dot::cells::CellChunk* GetCellChunk ();
 
 		void Start ();
 		void Stop ();

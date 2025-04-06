@@ -1,7 +1,5 @@
 #include <GameFrame.hpp>
 
-#include <iostream>
-
 Dot::GameFrame::GameFrame ()
 {
 	isRunning = false;
@@ -23,6 +21,24 @@ void Dot::GameFrame::CloseWindow ()
 sf::RenderWindow* Dot::GameFrame::GetWindow ()
 {
 	return &window;
+}
+
+// 
+
+void Dot::GameFrame::InitCellChunk (uint32_t width, uint32_t height)
+{
+	cellChunk.Init(width, height);
+}
+
+void Dot::GameFrame::DeleteCellChunk ()
+{
+	// delete[] cellChunk.cells;
+	return;
+}
+
+Dot::cells::CellChunk* Dot::GameFrame::GetCellChunk ()
+{
+	return &cellChunk;
 }
 
 // 

@@ -19,7 +19,8 @@ lib_dirs = -L${lib_dir}/bin
 lib_list = -lsfml-graphics-3 -lsfml-system-3 -lsfml-window-3
 
 # Warning Flags
-warn_flags = -Wall -Werror --pedantic
+# warn_flags = -Wall -Werror --pedantic
+warn_flags = -Wall --pedantic
 
 # Optimization Flags
 op_flags = -O3

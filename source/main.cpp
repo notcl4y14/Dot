@@ -1,26 +1,53 @@
 #include <main.hpp>
+#include <GameFrame.hpp>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
 #include <iostream>
 
+Dot::GameFrame frameDot;
+
 int32_t main (int32_t argc, char* argv[])
 {
-	sf::RenderWindow window(sf::VideoMode({800, 600}), "Dot");
+	frameDot.CreateWindow("Dot", 800, 600);
+	frameDot.Start();
+
+	sf::RenderWindow* window = frameDot.GetWindow();
 
 	// sf::Event event;
-	while (window.isOpen())
+	while (frameDot.isRunning)
 	{
-		while (const std::optional event = window.pollEvent())
+		/* Process Events
+		 */
+
+		while (const std::optional event = window->pollEvent())
 		{
 			if (event->is<sf::Event::Closed>())
-				window.close();
+				frameDot.Stop();
 		}
 
-		window.clear();
-		window.display();
+		/* Update
+		 */
+
+		/* Render
+		 */
+
+		sf::Image* canvas_img = frameDot.GetCanvasImage();
+
+		// canvas_img->setPixel({0, 0}, sf::Color::White);
+
+		frameDot.ApplyCanvas();
+
+		/* Draw
+		 */
+
+		window->clear();
+		window->draw(*frameDot.GetCanvasSprite());
+		window->display();
 	}
+
+	window->close();
 
 	return 0;
 }

@@ -5,7 +5,7 @@
 
 namespace Dot
 {
-	class Renderer
+	class Drawer
 	{
 	protected:
 		sf::RenderTexture* renderTex;
@@ -14,7 +14,7 @@ namespace Dot
 		sf::RenderTexture* GetRenderTexture ();
 		void SetRenderTexture (sf::RenderTexture* renderTex);
 
-		void Render ();
+		void Draw ();
 	};
 }
 

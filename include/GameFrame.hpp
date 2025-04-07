@@ -2,7 +2,7 @@
 #define DOT_GAMEFRAME_HPP
 
 #include <cells/CellChunk.hpp>
-#include <render/RenderCellChunk.hpp>
+#include <draw/DrawCellChunk.hpp>
 
 #include <SFML/Graphics.hpp>
 
@@ -15,7 +15,7 @@ namespace Dot
 
 		Dot::CellChunk cellChunk;
 
-		Dot::RenderCellChunk rCellChunk;
+		Dot::DrawCellChunk rCellChunk;
 
 	public:
 		uint8_t isRunning;

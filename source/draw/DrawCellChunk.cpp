@@ -1,8 +1,8 @@
-#include <render/RenderCellChunk.hpp>
+#include <draw/DrawCellChunk.hpp>
 
 #include <SFML/Graphics.hpp>
 
-void Dot::RenderCellChunk::Render ()
+void Dot::DrawCellChunk::Draw ()
 {
 	uint32_t loopIdx = 0;
 	uint32_t loopEnd = cellChunk->GetArea();

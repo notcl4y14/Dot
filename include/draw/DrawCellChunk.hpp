@@ -2,17 +2,17 @@
 #define DOT_RENDER_CELLCHUNK_HPP
 
 #include <cells/CellChunk.hpp>
-#include <render/Renderer.hpp>
+#include <draw/Drawer.hpp>
 
 namespace Dot
 {
-	class RenderCellChunk : public Renderer
+	class DrawCellChunk : public Drawer
 	{
 	private:
 	public:
 		Dot::CellChunk* cellChunk;
 
-		virtual void Render ();
+		void Draw ();
 	};
 }
 

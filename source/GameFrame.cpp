@@ -51,7 +51,7 @@ Dot::CellChunk* Dot::GameFrame::GetCellChunk ()
 
 void Dot::GameFrame::DrawCellChunk ()
 {
-	rCellChunk.Render();
+	rCellChunk.Draw();
 }
 
 // 

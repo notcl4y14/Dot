@@ -15,11 +15,11 @@ int32_t main (int32_t argc, char* argv[])
 	frameDot.InitCellChunk(10, 10);
 	frameDot.Start();
 
-	frameDot.GetCellChunk()->SetCell(10, 10, Dot::Cell(1, 0xFFFF00FF));
-
+	Dot::CellChunk* cellChunk = frameDot.GetCellChunk();
 	sf::RenderWindow* window = frameDot.GetWindow();
 
-	// sf::Event event;
+	cellChunk->SetCell(10, 10, Dot::Cell(1, 0xFFFF00FF));
+
 	while (frameDot.isRunning)
 	{
 		/* Process Events

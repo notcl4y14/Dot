@@ -14,6 +14,17 @@ int32_t main (int32_t argc, char** argv)
 {
 	printf("Hello World!\n");
 
+	init();
+	loop();
+	quit();
+
+	return 0;
+}
+
+// 
+
+void init ()
+{
 	// Initializing Dot Frame
 	dot_frame = DotFrame_Create();
 	sdl_frame = DotFrame_GetSDLFrame(dot_frame);
@@ -22,34 +33,78 @@ int32_t main (int32_t argc, char** argv)
 	SDLFrame_Init(sdl_frame);
 
 	// Initializing a Window
-	SDLFrame_CreateWindow(
-		sdl_frame,
-		"Dot", 800, 600,
-		SDL_WINDOW_HIDDEN|SDL_WINDOW_RESIZABLE);
+	const char* title = "Dot";
+	const uint32_t width = 800;
+	const uint32_t height = 600;
+	const SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE;
 
-	SDLFrame_ShowWindow(sdl_frame);
+	SDLFrame_CreateWindow(sdl_frame, title, width, height, flags);
 
+	// Initializing Runner
+	Runner_SetTargetLPS(dot_frame->runner, 60);
+}
+
+void quit ()
+{
+	// Freeing Frames
+	SDLFrame_Destroy(sdl_frame);
+	DotFrame_Delete(dot_frame);
+}
+
+void loop ()
+{
 	// Starting Dot Frame
 	DotFrame_Start(dot_frame);
 
 	while (DotFrame_IsRunning(dot_frame))
 	{
 		// Process Events
-		while (SDLFrame_PollEvent(sdl_frame))
+		process_events();
+
+		// Update & Render
+		update();
+		render();
+
+		// Next Tick
+		DotFrame_NextTick(dot_frame);
+
+		// Print FPS
+		if (dot_frame->runner->loop_count % 60 == 0)
 		{
-			switch (sdl_frame->event.type)
-			{
-				case SDL_EVENT_QUIT:
-					DotFrame_Stop(dot_frame);
-					break;
-			}
+			printf("FPS: %d\n", dot_frame->runner->lps_current);
 		}
 
-		SDL_Delay(10);
+		// Delay
+		SDL_Delay(1000 / dot_frame->runner->lps_target);
 	}
+}
 
-	// Freeing Frames
-	SDLFrame_Destroy(sdl_frame);
-	DotFrame_Delete(dot_frame);
-	return 0;
+// 
+
+void process_events ()
+{
+	while (SDLFrame_PollEvent(sdl_frame))
+	{
+		switch (sdl_frame->event.type)
+		{
+			case SDL_EVENT_QUIT:
+				DotFrame_Stop(dot_frame);
+				break;
+		}
+	}
+}
+
+void update ()
+{
+	return;
+}
+
+void render ()
+{
+	SDL_Renderer* renderer = dot_frame->sdl_frame->renderer;
+
+	SDL_SetRenderDrawColor(renderer, 25, 25, 25, 255);
+	SDL_RenderClear(renderer);
+
+	SDL_RenderPresent(renderer);
 }

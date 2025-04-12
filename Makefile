@@ -1,7 +1,7 @@
 # Options
 
 	# "Debug", "Release"
-	opt_target = Release
+	opt_target = Debug
 
 # Directories
 

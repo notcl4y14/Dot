@@ -28,15 +28,19 @@ void      SDLFrame_Delete (SDLFrame* sdl)
 	}
 }
 
+// 
+
 void SDLFrame_Init (SDLFrame* sdl)
 {
 	SDL_Init(SDL_INIT_VIDEO);
 }
 
-void SDLFrame_Free (SDLFrame* sdl)
+void SDLFrame_Destroy (SDLFrame* sdl)
 {
 	SDL_Quit();
 }
+
+// 
 
 void SDLFrame_CreateWindow (SDLFrame* sdl, const char* title, uint32_t width, uint32_t height, SDL_WindowFlags flags)
 {
@@ -59,6 +63,8 @@ void SDLFrame_HideWindow (SDLFrame* sdl)
 {
 	SDL_HideWindow(sdl->window);
 }
+
+// 
 
 uint8_t SDLFrame_PollEvent (SDLFrame* sdl)
 {

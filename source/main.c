@@ -14,11 +14,14 @@ int32_t main (int32_t argc, char** argv)
 {
 	printf("Hello World!\n");
 
+	// Initializing Dot Frame
 	dot_frame = DotFrame_Create();
-	sdl_frame = dot_frame->sdl_frame;
+	sdl_frame = DotFrame_GetSDLFrame(dot_frame);
 
+	// Initializing SDL Frame
 	SDLFrame_Init(sdl_frame);
 
+	// Initializing a Window
 	SDLFrame_CreateWindow(
 		sdl_frame,
 		"Dot", 800, 600,
@@ -26,16 +29,18 @@ int32_t main (int32_t argc, char** argv)
 
 	SDLFrame_ShowWindow(sdl_frame);
 
-	dot_frame->running = 1;
+	// Starting Dot Frame
+	DotFrame_Start(dot_frame);
 
-	while (dot_frame->running)
+	while (DotFrame_IsRunning(dot_frame))
 	{
+		// Process Events
 		while (SDLFrame_PollEvent(sdl_frame))
 		{
 			switch (sdl_frame->event.type)
 			{
 				case SDL_EVENT_QUIT:
-					dot_frame->running = 0;
+					DotFrame_Stop(dot_frame);
 					break;
 			}
 		}
@@ -43,7 +48,8 @@ int32_t main (int32_t argc, char** argv)
 		SDL_Delay(10);
 	}
 
-	SDLFrame_Free(sdl_frame);
+	// Freeing Frames
+	SDLFrame_Destroy(sdl_frame);
 	DotFrame_Delete(dot_frame);
 	return 0;
 }

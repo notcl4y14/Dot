@@ -1,14 +1,19 @@
 #include <Dot/main.h>
+#include <Dot/cells/cell.h>
+#include <Dot/cells/cell_chunk.h>
 #include <Dot/dot_frame.h>
+#include <Dot/manager.h>
+#include <Dot/runner.h>
 #include <Dot/sdl_frame.h>
 
 #include <SDL3/SDL.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
 
-DotFrame* dot_frame;
-SDLFrame* sdl_frame;
+DotFrame* _DotFrame;
+SDLFrame* _SDLFrame;
 
 int32_t main (int32_t argc, char** argv)
 {
@@ -23,14 +28,48 @@ int32_t main (int32_t argc, char** argv)
 
 // 
 
+// TODO: Move this somewhere else
+void powder_logic (CellChunk* cell_chunk, Cell* cell, uint32_t x, uint32_t y)
+{
+	if (y == cell_chunk->height - 1)
+	{
+		return;
+	}
+
+	Cell* cell_bottom = CellChunk_GetCell(cell_chunk, x, y + 1);
+	CellStats* cell_stats_bottom = Manager_GetUnitPtr(_DotFrame->cell_manager, cell_bottom->id);
+
+	if (cell_stats_bottom->is_empty == 1)
+	{
+		CellChunk_SwapCells(cell_chunk, x, y, x, y + 1);
+		return;
+	}
+
+	Cell* cell_left = CellChunk_GetCell(cell_chunk, x - 1, y);
+	Cell* cell_right = CellChunk_GetCell(cell_chunk, x + 1, y);
+	CellStats* cell_stats_left = Manager_GetUnitPtr(_DotFrame->cell_manager, cell_left->id);
+	CellStats* cell_stats_right = Manager_GetUnitPtr(_DotFrame->cell_manager, cell_right->id);
+
+	if (cell_stats_left->is_empty == 1)
+	{
+		CellChunk_SwapCells(cell_chunk, x, y, x - 1, y);
+		return;
+	}
+
+	if (cell_stats_right->is_empty == 1)
+	{
+		CellChunk_SwapCells(cell_chunk, x, y, x + 1, y);
+	}
+}
+
 void Init ()
 {
 	// Initializing Dot Frame
-	dot_frame = DotFrame_Create();
-	sdl_frame = SDLFrame_Create();
+	_DotFrame = DotFrame_Create();
+	_SDLFrame = SDLFrame_Create();
 
 	// Initializing SDL Frame
-	SDLFrame_InitSDL(sdl_frame);
+	SDLFrame_InitSDL(_SDLFrame);
 
 	// Initializing a Window
 	const char* title = "Dot";
@@ -38,31 +77,64 @@ void Init ()
 	const uint32_t height = 600;
 	const SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE;
 
-	SDLFrame_CreateWindow(sdl_frame, title, width, height, flags);
+	SDLFrame_CreateWindow(_SDLFrame, title, width, height, flags);
 
 	// Initializing Runner
-	Runner_SetTargetLPS(dot_frame->runner, 60);
+	Runner_SetTargetLPS(_DotFrame->runner, 60);
 
 	// Initializing CellChunk
-	CellChunk_Init(dot_frame->cell_chunk, 32, 32);
-	CellChunk_SetCell(dot_frame->cell_chunk, 10, 10, (Cell){Sand, {255, 255, 0, 255}});
+	CellChunk_Init(_DotFrame->cell_chunk, 32, 32);
+	CellChunk_SetCell(_DotFrame->cell_chunk, 10, 10, (Cell){CellID_Sand, 0xFFFF00FF});
+
+	// Initializing Managers
+	Manager_Init(_DotFrame->cell_manager, sizeof(CellStats) * 4, sizeof(CellStats));
+
+	{
+		CellStats* air_stats = Manager_GetUnitPtr(_DotFrame->cell_manager, 0);
+		air_stats->id = 0;
+		air_stats->colors_v = NULL;
+		air_stats->colors_c = 0;
+		air_stats->is_update = 0;
+		air_stats->is_render = 0;
+		air_stats->is_empty = 1;
+		air_stats->is_solid = 0;
+		air_stats->is_powder = 0;
+		air_stats->is_fluid = 0;
+		air_stats->method = NULL;
+	}
+
+	{
+		CellStats* sand_stats = Manager_GetUnitPtr(_DotFrame->cell_manager, 1);
+		sand_stats->id = 1;
+		sand_stats->colors_v = malloc(sizeof(uint32_t) * 2);
+			sand_stats->colors_v[0] = 0xFFFF00FF;
+			sand_stats->colors_v[1] = 0xFFFF88FF;
+		sand_stats->colors_c = 2;
+		sand_stats->is_update = 1;
+		sand_stats->is_render = 1;
+		sand_stats->is_empty = 0;
+		sand_stats->is_solid = 0;
+		sand_stats->is_powder = 1;
+		sand_stats->is_fluid = 0;
+		sand_stats->method = powder_logic;
+	}
 }
 
 void Quit ()
 {
 	// Freeing Frames
-	SDLFrame_QuitSDL(sdl_frame);
-	DotFrame_Delete(dot_frame);
+	SDLFrame_QuitSDL(_SDLFrame);
+	DotFrame_Delete(_DotFrame);
 }
 
 void Loop ()
 {
-	Runner* runner = dot_frame->runner;
+	Runner* runner = _DotFrame->runner;
 
 	// Starting Dot Frame
-	DotFrame_Start(dot_frame);
+	DotFrame_Start(_DotFrame);
 
-	while (DotFrame_IsRunning(dot_frame))
+	while (DotFrame_IsRunning(_DotFrame))
 	{
 		// Process Events
 		ProcessEvents();
@@ -72,7 +144,7 @@ void Loop ()
 		Render();
 
 		// Next Tick
-		DotFrame_Tick(dot_frame);
+		DotFrame_Tick(_DotFrame);
 
 		// Print FPS each second
 		if (runner->loop_count % runner->lps_target == 0)
@@ -89,12 +161,12 @@ void Loop ()
 
 void ProcessEvents ()
 {
-	while (SDLFrame_PollEvent(sdl_frame))
+	while (SDLFrame_PollEvent(_SDLFrame))
 	{
-		switch (sdl_frame->event.type)
+		switch (_SDLFrame->event.type)
 		{
 			case SDL_EVENT_QUIT:
-				DotFrame_Stop(dot_frame);
+				DotFrame_Stop(_DotFrame);
 				break;
 		}
 	}
@@ -103,20 +175,18 @@ void ProcessEvents ()
 void Update ()
 {
 	// Update CellChunk
-	CellChunk_Update(dot_frame->cell_chunk);
+	CellChunk_Update(_DotFrame->cell_chunk);
 }
 
 void Render ()
 {
-	SDL_Renderer* renderer = sdl_frame->renderer;
-	SDL_Rect rect;
-	SDL_FRect frect;
+	SDL_Renderer* renderer = _SDLFrame->renderer;
 
 	SDL_SetRenderDrawColor(renderer, 25, 25, 25, 255);
 	SDL_RenderClear(renderer);
 
 	// Render CellChunk
-	CellChunk_Render(dot_frame->cell_chunk, sdl_frame, 10);
+	CellChunk_Render(_DotFrame->cell_chunk, 10);
 
 	SDL_RenderPresent(renderer);
 }

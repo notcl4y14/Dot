@@ -2,12 +2,15 @@
 #define DOT_DOTFRAME_H
 
 #include <Dot/cells/cell_chunk.h>
-#include <Dot/sdl_frame.h>
+#include <Dot/manager.h>
 #include <Dot/runner.h>
+#include <Dot/sdl_frame.h>
 
 typedef struct DotFrame
 {
 	CellChunk* cell_chunk;
+
+	Manager* cell_manager;
 
 	Runner* runner;
 

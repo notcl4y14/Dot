@@ -1,5 +1,6 @@
 #include <Dot/cells/cell_chunk.h>
 #include <Dot/cells/cell.h>
+#include <Dot/main.h>
 #include <Dot/sdl_frame.h>
 
 #include <SDL3/SDL.h>
@@ -47,35 +48,26 @@ void CellChunk_Update (CellChunk* chunk)
 		{
 			// printf("(%d; %d)\t", loop1_idx, loop2_idx);
 			Cell* cell = CellChunk_GetCell(chunk, loop1_idx, loop2_idx);
+			CellStats* cell_stats = Manager_GetUnitPtr(_DotFrame->cell_manager, cell->id);
 
-			if (cell->id == 0)
+			if (cell_stats->is_update == 0)
 			{
 				continue;
 			}
 
-			// TODO: Make a new storage for cell functions
-			if (loop2_idx == chunk->height - 1)
-			{
-				continue;
-			}
-
-			Cell* cell_bottom = CellChunk_GetCell(chunk, loop1_idx, loop2_idx + 1);
-
-			if (cell_bottom->id == 0)
-			{
-				CellChunk_SwapCells(chunk, loop1_idx, loop2_idx, loop1_idx, loop2_idx + 1);
-			}
+			cell_stats->method(chunk, cell, loop1_idx, loop2_idx);
 		}
 
 		loop2_idx = loop2_begin;
 	}
 }
 
-void CellChunk_Render (CellChunk* cell_chunk, SDLFrame* sdl, uint32_t scale)
+void CellChunk_Render (CellChunk* cell_chunk, uint32_t scale)
 {
-	SDL_Renderer* renderer = sdl->renderer;
+	SDL_Renderer* renderer = _SDLFrame->renderer;
 	SDL_FRect frect;
 	Cell cell;
+	uint8_t color[4];
 
 	// Render CellChunk borders
 	frect.x = 0;
@@ -100,7 +92,19 @@ void CellChunk_Render (CellChunk* cell_chunk, SDLFrame* sdl, uint32_t scale)
 		frect.w = scale;
 		frect.h = scale;
 
-		SDL_SetRenderDrawColor(renderer, cell.color[0], cell.color[1], cell.color[2], cell.color[3]);
+		// color = cell.color;
+		// memcpy((&color)[0], (uint8_t*)((&cell.color))[0], sizeof(uint8_t));
+		// memcpy((&color)[1], (uint8_t*)((&cell.color))[1], sizeof(uint8_t));
+		// memcpy((&color)[2], (uint8_t*)((&cell.color))[2], sizeof(uint8_t));
+		// memcpy((&color)[3], (uint8_t*)((&cell.color))[3], sizeof(uint8_t));
+
+		// May not be Different-Endian-Proof
+		color[0] = (cell.color >> 24) & 0xFF;
+		color[1] = (cell.color >> 16) & 0xFF;
+		color[2] = (cell.color >> 8) & 0xFF;
+		color[3] = cell.color & 0xFF;
+
+		SDL_SetRenderDrawColor(renderer, color[0], color[1], color[2], color[3]);
 		SDL_RenderFillRect(renderer, &frect);
 	}
 }

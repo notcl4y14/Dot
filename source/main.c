@@ -45,20 +45,20 @@ void powder_logic (CellChunk* cell_chunk, Cell* cell, uint32_t x, uint32_t y)
 		return;
 	}
 
-	Cell* cell_left = CellChunk_GetCell(cell_chunk, x - 1, y);
-	Cell* cell_right = CellChunk_GetCell(cell_chunk, x + 1, y);
+	Cell* cell_left = CellChunk_GetCell(cell_chunk, x - 1, y + 1);
+	Cell* cell_right = CellChunk_GetCell(cell_chunk, x + 1, y + 1);
 	CellStats* cell_stats_left = Manager_GetUnitPtr(_DotFrame->cell_manager, cell_left->id);
 	CellStats* cell_stats_right = Manager_GetUnitPtr(_DotFrame->cell_manager, cell_right->id);
 
-	if (cell_stats_left->is_empty == 1)
+	if (x > 0 && cell_stats_left->is_empty == 1)
 	{
-		CellChunk_SwapCells(cell_chunk, x, y, x - 1, y);
+		CellChunk_SwapCells(cell_chunk, x, y, x - 1, y + 1);
 		return;
 	}
 
-	if (cell_stats_right->is_empty == 1)
+	if (x < cell_chunk->width - 1 && cell_stats_right->is_empty == 1)
 	{
-		CellChunk_SwapCells(cell_chunk, x, y, x + 1, y);
+		CellChunk_SwapCells(cell_chunk, x, y, x + 1, y + 1);
 	}
 }
 
@@ -176,6 +176,7 @@ void Update ()
 {
 	// Update CellChunk
 	CellChunk_Update(_DotFrame->cell_chunk);
+	CellChunk_SetCell(_DotFrame->cell_chunk, 10, 10, Cell_CreateFromStats(Manager_GetUnitPtr(_DotFrame->cell_manager, CellID_Sand)));
 }
 
 void Render ()

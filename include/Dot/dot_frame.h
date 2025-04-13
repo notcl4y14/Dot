@@ -7,7 +7,7 @@
 
 typedef struct DotFrame
 {
-	CellChunk* chunk;
+	CellChunk* cell_chunk;
 
 	Runner* runner;
 

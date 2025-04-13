@@ -44,8 +44,8 @@ void Init ()
 	Runner_SetTargetLPS(dot_frame->runner, 60);
 
 	// Initializing CellChunk
-	CellChunk_Init(dot_frame->chunk, 32, 32);
-	CellChunk_SetCell(dot_frame->chunk, 10, 10, (Cell){Sand, {255, 255, 0, 255}});
+	CellChunk_Init(dot_frame->cell_chunk, 32, 32);
+	CellChunk_SetCell(dot_frame->cell_chunk, 10, 10, (Cell){Sand, {255, 255, 0, 255}});
 }
 
 void Quit ()
@@ -102,7 +102,8 @@ void ProcessEvents ()
 
 void Update ()
 {
-	return;
+	// Update CellChunk
+	CellChunk_Update(dot_frame->cell_chunk);
 }
 
 void Render ()
@@ -115,39 +116,7 @@ void Render ()
 	SDL_RenderClear(renderer);
 
 	// Render CellChunk
-	{
-		CellChunk* cell_chunk = dot_frame->chunk;
-		Cell cell;
-
-		uint32_t scale = 10;
-
-		// Render CellChunk borders
-		frect.x = 0;
-		frect.y = 0;
-		frect.w = cell_chunk->width * scale;
-		frect.h = cell_chunk->height * scale;
-		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-		SDL_RenderRect(renderer, &frect);
-
-		// Render CellChunk cells
-		for (uint32_t i = 0; i < cell_chunk->area; i++)
-		{
-			cell = cell_chunk->cells[i];
-
-			if (cell.id == 0)
-			{
-				continue;
-			}
-
-			frect.x = (i % cell_chunk->width) * scale;
-			frect.y = (i / cell_chunk->width) * scale;
-			frect.w = scale;
-			frect.h = scale;
-
-			SDL_SetRenderDrawColor(renderer, cell.color[0], cell.color[1], cell.color[2], cell.color[3]);
-			SDL_RenderFillRect(renderer, &frect);
-		}
-	}
+	CellChunk_Render(dot_frame->cell_chunk, sdl_frame, 10);
 
 	SDL_RenderPresent(renderer);
 }

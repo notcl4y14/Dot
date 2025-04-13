@@ -9,7 +9,7 @@ DotFrame* DotFrame_Create ()
 {
 	DotFrame* dot = malloc(sizeof(DotFrame));
 
-	dot->chunk = calloc(sizeof(CellChunk), 1);
+	dot->cell_chunk = calloc(sizeof(CellChunk), 1);
 	dot->runner = calloc(sizeof(Runner), 1);
 	dot->running = 0;
 	dot->tick_count = 0;
@@ -19,9 +19,9 @@ DotFrame* DotFrame_Create ()
 
 void      DotFrame_Delete (DotFrame* dot)
 {
-	CellChunk_Free(dot->chunk);
-	free(dot->chunk);
-	dot->chunk = NULL;
+	CellChunk_Free(dot->cell_chunk);
+	free(dot->cell_chunk);
+	dot->cell_chunk = NULL;
 
 	free(dot->runner);
 	dot->runner = NULL;

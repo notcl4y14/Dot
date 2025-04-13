@@ -1,5 +1,6 @@
 #include <Dot/cells/cell.h>
 
+#include <stdlib.h>
 #include <stdint.h>
 
 Cell Cell_CreateFromStats (CellStats* cell_stats)
@@ -15,5 +16,9 @@ Cell Cell_CreateFromStats (CellStats* cell_stats)
 
 void CellStats_Free (CellStats* cell_stats)
 {
-	return;
+	if (cell_stats->colors_v != NULL)
+	{
+		free(cell_stats->colors_v);
+		cell_stats->colors_v = NULL;
+	}
 }

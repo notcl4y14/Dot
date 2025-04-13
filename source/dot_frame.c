@@ -21,19 +21,18 @@ DotFrame* DotFrame_Create ()
 
 void      DotFrame_Delete (DotFrame* dot)
 {
+	uint32_t loop_idx, loop_end;
+
 	CellChunk_Free(dot->cell_chunk);
 	free(dot->cell_chunk);
 	dot->cell_chunk = NULL;
 
-	for (int i = 0; i < dot->cell_manager->size / dot->cell_manager->stride; i++)
-	{
-		CellStats* cell_stats = Manager_GetUnitPtr(dot->cell_manager, i);
+	loop_idx = -1;
+	loop_end = dot->cell_manager->size / dot->cell_manager->stride;
 
-		if (cell_stats->colors_v != NULL)
-		{
-			free(cell_stats->colors_v);
-			cell_stats->colors_v = NULL;
-		}
+	while (++loop_idx < loop_end)
+	{
+		CellStats_Free(Manager_GetUnitPtr(dot->cell_manager, loop_idx));
 	}
 
 	Manager_Free(dot->cell_manager);

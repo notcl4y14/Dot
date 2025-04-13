@@ -5,12 +5,12 @@
 
 int32_t main (int32_t argc, char** argv);
 
-void init ();
-void quit ();
-void loop ();
+void Init ();
+void Quit ();
+void Loop ();
 
-void process_events ();
-void update ();
-void render ();
+void ProcessEvents ();
+void Update ();
+void Render ();
 
 #endif

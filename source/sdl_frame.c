@@ -30,12 +30,12 @@ void      SDLFrame_Delete (SDLFrame* sdl)
 
 // 
 
-void SDLFrame_Init (SDLFrame* sdl)
+void SDLFrame_InitSDL (SDLFrame* sdl)
 {
 	SDL_Init(SDL_INIT_VIDEO);
 }
 
-void SDLFrame_Destroy (SDLFrame* sdl)
+void SDLFrame_QuitSDL (SDLFrame* sdl)
 {
 	SDL_Quit();
 }

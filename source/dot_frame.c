@@ -1,4 +1,5 @@
 #include <Dot/dot_frame.h>
+#include <Dot/cells/cell_chunk.h>
 #include <Dot/sdl_frame.h>
 #include <Dot/runner.h>
 
@@ -8,8 +9,8 @@ DotFrame* DotFrame_Create ()
 {
 	DotFrame* dot = malloc(sizeof(DotFrame));
 
-	dot->sdl_frame = SDLFrame_Create();
-	dot->runner = Runner_Create();
+	dot->chunk = calloc(sizeof(CellChunk), 1);
+	dot->runner = calloc(sizeof(Runner), 1);
 	dot->running = 0;
 	dot->tick_count = 0;
 
@@ -18,15 +19,15 @@ DotFrame* DotFrame_Create ()
 
 void      DotFrame_Delete (DotFrame* dot)
 {
-	SDLFrame_Delete(dot->sdl_frame);
+	CellChunk_Free(dot->chunk);
+	free(dot->chunk);
+	dot->chunk = NULL;
+
+	free(dot->runner);
+	dot->runner = NULL;
 }
 
 // 
-
-SDLFrame* DotFrame_GetSDLFrame (DotFrame* dot)
-{
-	return dot->sdl_frame;
-}
 
 uint8_t DotFrame_IsRunning (DotFrame* dot)
 {
@@ -48,7 +49,7 @@ void DotFrame_Stop (DotFrame* dot)
 
 // 
 
-void DotFrame_NextTick (DotFrame* dot)
+void DotFrame_Tick (DotFrame* dot)
 {
 	dot->tick_count++;
 	Runner_Next(dot->runner);

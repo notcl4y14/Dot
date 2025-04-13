@@ -18,7 +18,7 @@
 # Compiler Parameters
 
 	param_out    = -o ${dir_build}/Dot
-	param_source = $(wildcard ${dir_source}/*.c)
+	param_source = $(wildcard ${dir_source}/*.c ${dir_source}/cells/*.c)
 	param_incdir = -I${dir_include} -I${dir_libraries}/include
 	param_libdir = -Llibraries/bin
 	param_libs   = -lSDL3

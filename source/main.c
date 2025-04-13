@@ -14,23 +14,23 @@ int32_t main (int32_t argc, char** argv)
 {
 	printf("Hello World!\n");
 
-	init();
-	loop();
-	quit();
+	Init();
+	Loop();
+	Quit();
 
 	return 0;
 }
 
 // 
 
-void init ()
+void Init ()
 {
 	// Initializing Dot Frame
 	dot_frame = DotFrame_Create();
-	sdl_frame = DotFrame_GetSDLFrame(dot_frame);
+	sdl_frame = SDLFrame_Create();
 
 	// Initializing SDL Frame
-	SDLFrame_Init(sdl_frame);
+	SDLFrame_InitSDL(sdl_frame);
 
 	// Initializing a Window
 	const char* title = "Dot";
@@ -42,46 +42,52 @@ void init ()
 
 	// Initializing Runner
 	Runner_SetTargetLPS(dot_frame->runner, 60);
+
+	// Initializing CellChunk
+	CellChunk_Init(dot_frame->chunk, 32, 32);
+	CellChunk_SetCell(dot_frame->chunk, 10, 10, (Cell){Sand, {255, 255, 0, 255}});
 }
 
-void quit ()
+void Quit ()
 {
 	// Freeing Frames
-	SDLFrame_Destroy(sdl_frame);
+	SDLFrame_QuitSDL(sdl_frame);
 	DotFrame_Delete(dot_frame);
 }
 
-void loop ()
+void Loop ()
 {
+	Runner* runner = dot_frame->runner;
+
 	// Starting Dot Frame
 	DotFrame_Start(dot_frame);
 
 	while (DotFrame_IsRunning(dot_frame))
 	{
 		// Process Events
-		process_events();
+		ProcessEvents();
 
 		// Update & Render
-		update();
-		render();
+		Update();
+		Render();
 
 		// Next Tick
-		DotFrame_NextTick(dot_frame);
+		DotFrame_Tick(dot_frame);
 
-		// Print FPS
-		if (dot_frame->runner->loop_count % 60 == 0)
+		// Print FPS each second
+		if (runner->loop_count % runner->lps_target == 0)
 		{
-			printf("FPS: %d\n", dot_frame->runner->lps_current);
+			printf("FPS: %d\n", runner->lps_current);
 		}
 
 		// Delay
-		SDL_Delay(1000 / dot_frame->runner->lps_target);
+		SDL_Delay(1000 / runner->lps_target);
 	}
 }
 
 // 
 
-void process_events ()
+void ProcessEvents ()
 {
 	while (SDLFrame_PollEvent(sdl_frame))
 	{
@@ -94,17 +100,54 @@ void process_events ()
 	}
 }
 
-void update ()
+void Update ()
 {
 	return;
 }
 
-void render ()
+void Render ()
 {
-	SDL_Renderer* renderer = dot_frame->sdl_frame->renderer;
+	SDL_Renderer* renderer = sdl_frame->renderer;
+	SDL_Rect rect;
+	SDL_FRect frect;
 
 	SDL_SetRenderDrawColor(renderer, 25, 25, 25, 255);
 	SDL_RenderClear(renderer);
+
+	// Render CellChunk
+	{
+		CellChunk* cell_chunk = dot_frame->chunk;
+		Cell cell;
+
+		uint32_t scale = 10;
+
+		// Render CellChunk borders
+		frect.x = 0;
+		frect.y = 0;
+		frect.w = cell_chunk->width * scale;
+		frect.h = cell_chunk->height * scale;
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		SDL_RenderRect(renderer, &frect);
+
+		// Render CellChunk cells
+		for (uint32_t i = 0; i < cell_chunk->area; i++)
+		{
+			cell = cell_chunk->cells[i];
+
+			if (cell.id == 0)
+			{
+				continue;
+			}
+
+			frect.x = (i % cell_chunk->width) * scale;
+			frect.y = (i / cell_chunk->width) * scale;
+			frect.w = scale;
+			frect.h = scale;
+
+			SDL_SetRenderDrawColor(renderer, cell.color[0], cell.color[1], cell.color[2], cell.color[3]);
+			SDL_RenderFillRect(renderer, &frect);
+		}
+	}
 
 	SDL_RenderPresent(renderer);
 }

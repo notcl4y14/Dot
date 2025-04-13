@@ -15,8 +15,8 @@ typedef struct SDLFrame
 SDLFrame* SDLFrame_Create ();
 void      SDLFrame_Delete (SDLFrame* sdl);
 
-void SDLFrame_Init (SDLFrame* sdl);
-void SDLFrame_Destroy (SDLFrame* sdl);
+void SDLFrame_InitSDL (SDLFrame* sdl);
+void SDLFrame_QuitSDL (SDLFrame* sdl);
 
 void SDLFrame_CreateWindow (SDLFrame* sdl, const char* title, uint32_t width, uint32_t height, SDL_WindowFlags flags);
 void SDLFrame_DeleteWindow (SDLFrame* sdl);

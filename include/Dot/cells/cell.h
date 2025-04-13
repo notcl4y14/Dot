@@ -7,12 +7,14 @@ typedef enum CellID : uint8_t
 {
 	Air = 0,
 	Sand,
+	Stone
 } CellID;
 
 typedef struct Cell
 {
 	CellID id;
 	uint8_t color[4];
+	uint8_t fall;
 } Cell;
 
 typedef struct CellStats

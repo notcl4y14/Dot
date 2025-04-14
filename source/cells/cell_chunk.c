@@ -21,7 +21,11 @@ void CellChunk_Init (CellChunk* chunk, uint32_t width, uint32_t height)
 void CellChunk_Free (CellChunk* chunk)
 {
 	free(chunk->cells);
+
 	chunk->cells = NULL;
+	chunk->width = 0;
+	chunk->height = 0;
+	chunk->area = 0;
 }
 
 // 
@@ -29,36 +33,41 @@ void CellChunk_Free (CellChunk* chunk)
 void CellChunk_Update (CellChunk* chunk)
 {
 	// x, y
-	int32_t loop1_idx, loop2_idx;
-	int32_t loop1_begin, loop1_end;
-	int32_t loop2_begin, loop2_end;
+	int32_t loop_x_idx, loop_y_idx;
+	int32_t loop_x_begin, loop_y_begin;
+	int32_t loop_x_end, loop_y_end;
 
-	loop1_begin = -1;
-	loop2_begin = chunk->height;
+	// X iterator starts from 0
+	// Y iterator starts from the chunk height value
+	loop_x_begin = -1;
+	loop_y_begin = chunk->height;
 
-	loop1_end = chunk->width;
-	loop2_end = 0;
+	// X iterator ends on the chunk width value
+	// Y iterator ends on 0
+	loop_x_end = chunk->width;
+	loop_y_end = 0;
 
-	loop1_idx = loop1_begin;
-	loop2_idx = loop2_begin;
+	loop_x_idx = loop_x_begin;
+	loop_y_idx = loop_y_begin;
 
-	while (++loop1_idx < loop1_end)
+	while (++loop_x_idx < loop_x_end)
 	{
-		while (--loop2_idx >= loop2_end)
+		while (--loop_y_idx >= loop_y_end)
 		{
-			// printf("(%d; %d)\t", loop1_idx, loop2_idx);
-			Cell* cell = CellChunk_GetCell(chunk, loop1_idx, loop2_idx);
-			CellStats* cell_stats = Manager_GetUnitPtr(_DotFrame->cell_manager, cell->id);
+			Cell* const cell =
+				CellChunk_GetCell(chunk, loop_x_idx, loop_y_idx);
+			const CellStats* cell_stats =
+				Manager_GetUnitPtr(&_DotFrame->cell_manager, cell->id);
 
-			if (cell_stats->is_update == 0)
+			if (cell_stats->is_update == false)
 			{
 				continue;
 			}
 
-			cell_stats->method(chunk, cell, loop1_idx, loop2_idx);
+			cell_stats->method(chunk, cell, loop_x_idx, loop_y_idx);
 		}
 
-		loop2_idx = loop2_begin;
+		loop_y_idx = loop_y_begin;
 	}
 }
 
@@ -67,6 +76,7 @@ void CellChunk_Render (CellChunk* cell_chunk, uint32_t scale)
 	SDL_Renderer* renderer = _SDLFrame->renderer;
 	SDL_FRect frect;
 	Cell cell;
+	CellStats* cell_stats;
 	uint8_t color[4];
 
 	// Render CellChunk borders
@@ -81,8 +91,9 @@ void CellChunk_Render (CellChunk* cell_chunk, uint32_t scale)
 	for (uint32_t i = 0; i < cell_chunk->area; i++)
 	{
 		cell = cell_chunk->cells[i];
+		cell_stats = Manager_GetUnitPtr(&_DotFrame->cell_manager, cell.id);
 
-		if (cell.id == 0)
+		if (cell_stats->is_render == false)
 		{
 			continue;
 		}
@@ -93,8 +104,8 @@ void CellChunk_Render (CellChunk* cell_chunk, uint32_t scale)
 		frect.h = scale;
 
 		// color = cell.color;
-		// memcpy((&color)[0], (uint8_t*)((&cell.color))[0], sizeof(uint8_t));
 		// memcpy((&color)[1], (uint8_t*)((&cell.color))[1], sizeof(uint8_t));
+		// memcpy((&color)[0], (uint8_t*)((&cell.color))[0], sizeof(uint8_t));
 		// memcpy((&color)[2], (uint8_t*)((&cell.color))[2], sizeof(uint8_t));
 		// memcpy((&color)[3], (uint8_t*)((&cell.color))[3], sizeof(uint8_t));
 
@@ -111,12 +122,12 @@ void CellChunk_Render (CellChunk* cell_chunk, uint32_t scale)
 
 // 
 
-Cell* CellChunk_GetCell (CellChunk* chunk, uint32_t x, uint32_t y)
+inline Cell* CellChunk_GetCell (CellChunk* chunk, uint32_t x, uint32_t y)
 {
 	return &chunk->cells[x + y * chunk->width];
 }
 
-void CellChunk_SetCell (CellChunk* chunk, uint32_t x, uint32_t y, Cell cell)
+inline void CellChunk_SetCell (CellChunk* chunk, uint32_t x, uint32_t y, Cell cell)
 {
 	chunk->cells[x + y * chunk->width] = cell;
 }

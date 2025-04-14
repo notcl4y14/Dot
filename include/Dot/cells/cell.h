@@ -2,8 +2,8 @@
 #define DOT_CELL_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
-enum   CellID;
 struct Cell;
 struct CellStats;
 struct CellChunk;
@@ -21,7 +21,7 @@ typedef struct Cell
 {
 	uint8_t id;
 	uint32_t color;
-	uint8_t fall;
+	bool fall;
 } Cell;
 
 typedef struct CellStats
@@ -30,19 +30,24 @@ typedef struct CellStats
 	uint32_t* colors_v;
 	uint32_t colors_c;
 
-	uint8_t is_update;
-	uint8_t is_render;
+	bool is_update;
+	bool is_render;
 
-	uint8_t is_empty;
-	uint8_t is_solid;
-	uint8_t is_powder;
-	uint8_t is_fluid;
+	bool is_empty;
+	bool is_solid;
+	bool is_powder;
+	bool is_fluid;
 
 	CellMethod method;
 } CellStats;
 
-Cell Cell_CreateFromStats (CellStats* cell_stats);
+void Cell_Init (Cell* cell, uint8_t id, uint32_t color, bool fall);
+void Cell_Free (Cell* cell);
 
+Cell Cell_CreateFromStats (CellStats* cell_stats);
+void Cell_InitFromStats (Cell* cell, CellStats* cell_stats);
+
+void CellStats_Init (CellStats* cell_stats);
 void CellStats_Free (CellStats* cell_stats);
 
 #endif

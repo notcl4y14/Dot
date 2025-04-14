@@ -23,6 +23,9 @@ void SDLFrame_DeleteWindow (SDLFrame* sdl);
 void SDLFrame_ShowWindow (SDLFrame* sdl);
 void SDLFrame_HideWindow (SDLFrame* sdl);
 
+void SDLFrame_CreateRenderer (SDLFrame* sdl);
+void SDLFrame_DeleteRenderer (SDLFrame* sdl);
+
 uint8_t SDLFrame_PollEvent (SDLFrame* sdl);
 
 #endif

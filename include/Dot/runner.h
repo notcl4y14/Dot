@@ -12,15 +12,12 @@ typedef struct Runner
 	uint32_t loop_count;
 } Runner;
 
-Runner* Runner_Create ();
-void    Runner_Delete (Runner* runner);
-
 void Runner_Init (Runner* runner);
-void Runner_Free (Runner* runner);
+void Runner_Free (Runner* runner); // This does nothing btw, so we might just nullify the data
 
-void Runner_SetTargetLPS (Runner* runner, uint32_t lps);
+void Runner_SetTargetLPS (Runner* runner, uint32_t lps); // TODO: remove this
 void Runner_Start (Runner* runner);
 void Runner_Stop (Runner* runner);
-void Runner_Next (Runner* runner);
+void Runner_Tick (Runner* runner);
 
 #endif

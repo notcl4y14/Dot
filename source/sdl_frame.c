@@ -15,7 +15,7 @@ SDLFrame* SDLFrame_Create ()
 	return sdl;
 }
 
-void      SDLFrame_Delete (SDLFrame* sdl)
+void SDLFrame_Delete (SDLFrame* sdl)
 {
 	if (sdl->renderer != NULL)
 	{
@@ -26,6 +26,9 @@ void      SDLFrame_Delete (SDLFrame* sdl)
 	{
 		SDL_DestroyWindow(sdl->window);
 	}
+
+	sdl->window = NULL;
+	sdl->renderer = NULL;
 }
 
 // 
@@ -45,12 +48,10 @@ void SDLFrame_QuitSDL (SDLFrame* sdl)
 void SDLFrame_CreateWindow (SDLFrame* sdl, const char* title, uint32_t width, uint32_t height, SDL_WindowFlags flags)
 {
 	sdl->window = SDL_CreateWindow(title, width, height, flags);
-	sdl->renderer = SDL_CreateRenderer(sdl->window, NULL);
 }
 
 void SDLFrame_DeleteWindow (SDLFrame* sdl)
 {
-	SDL_DestroyRenderer(sdl->renderer);
 	SDL_DestroyWindow(sdl->window);
 }
 
@@ -62,6 +63,18 @@ void SDLFrame_ShowWindow (SDLFrame* sdl)
 void SDLFrame_HideWindow (SDLFrame* sdl)
 {
 	SDL_HideWindow(sdl->window);
+}
+
+// 
+
+void SDLFrame_CreateRenderer (SDLFrame* sdl)
+{
+	sdl->renderer = SDL_CreateRenderer(sdl->window, NULL);
+}
+
+void SDLFrame_DeleteRenderer (SDLFrame* sdl)
+{
+	SDL_DestroyRenderer(sdl->renderer);
 }
 
 // 

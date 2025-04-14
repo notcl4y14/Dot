@@ -5,62 +5,84 @@
 #include <Dot/sdl_frame.h>
 
 #include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
 
 DotFrame* DotFrame_Create ()
 {
 	DotFrame* dot = malloc(sizeof(DotFrame));
 
-	dot->cell_chunk = calloc(sizeof(CellChunk), 1);
-	dot->cell_manager = calloc(sizeof(Manager), 1);
-	dot->runner = calloc(sizeof(Runner), 1);
-	dot->running = 0;
+	dot->cell_chunk.cells = NULL;
+	dot->cell_chunk.width = 0;
+	dot->cell_chunk.height = 0;
+	dot->cell_chunk.area = 0;
+
+	dot->cell_manager.data = NULL;
+	dot->cell_manager.size = 0;
+	dot->cell_manager.stride = 0;
+
+	dot->runner.lps_current = 0;
+	dot->runner.lps_target = 0;
+	dot->runner.lps_counter = 0;
+	dot->runner.lps_counter_ntime = 0;
+	dot->runner.loop_count = 0;
+
+	dot->is_running = false;
 	dot->tick_count = 0;
 
 	return dot;
 }
 
-void      DotFrame_Delete (DotFrame* dot)
+void DotFrame_Delete (DotFrame* dot)
 {
+	CellChunk* const cell_chunk = &dot->cell_chunk;
+	Manager* const cell_manager = &dot->cell_manager;
+	Runner* const runner = &dot->runner;
+
 	uint32_t loop_idx, loop_end;
 
-	CellChunk_Free(dot->cell_chunk);
-	free(dot->cell_chunk);
-	dot->cell_chunk = NULL;
-
 	loop_idx = -1;
-	loop_end = dot->cell_manager->size / dot->cell_manager->stride;
+	loop_end = cell_manager->size / cell_manager->stride;
 
 	while (++loop_idx < loop_end)
 	{
-		CellStats_Free(Manager_GetUnitPtr(dot->cell_manager, loop_idx));
+		CellStats* const cell_stats =
+			Manager_GetUnitPtr(cell_manager, loop_idx);
+		CellStats_Free(cell_stats);
 	}
 
-	Manager_Free(dot->cell_manager);
-	free(dot->cell_manager);
-	dot->cell_manager = NULL;
+	CellChunk_Free(cell_chunk);
+	Manager_Free(cell_manager);
+	Runner_Free(runner);
 
-	free(dot->runner);
-	dot->runner = NULL;
+	dot->is_running = false;
+	dot->tick_count = 0;
 }
 
 // 
 
-uint8_t DotFrame_IsRunning (DotFrame* dot)
+inline bool DotFrame_IsRunning (DotFrame* dot)
 {
-	return dot->running;
+	return dot->is_running;
+}
+
+inline uint32_t DotFrame_TickCount (DotFrame* dot)
+{
+	return dot->tick_count;
 }
 
 // 
 
 void DotFrame_Start (DotFrame* dot)
 {
-	dot->running = 1;
-	Runner_Start(dot->runner);
+	dot->is_running = true;
+	Runner_Start(&dot->runner);
 }
 
 void DotFrame_Stop (DotFrame* dot)
 {
-	dot->running = 0;
+	dot->is_running = false;
+	Runner_Stop(&dot->runner);
 }
 
 // 
@@ -68,5 +90,5 @@ void DotFrame_Stop (DotFrame* dot)
 void DotFrame_Tick (DotFrame* dot)
 {
 	dot->tick_count++;
-	Runner_Next(dot->runner);
+	Runner_Tick(&dot->runner);
 }

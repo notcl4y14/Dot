@@ -21,7 +21,10 @@ void Manager_InitC (Manager* manager, uint32_t capacity, uint32_t unit_size)
 void Manager_Free (Manager* manager)
 {
 	free(manager->data);
+
 	manager->data = NULL;
+	manager->size = 0;
+	manager->stride = 0;
 }
 
 // 
@@ -34,17 +37,17 @@ void Manager_Resize (Manager* manager, uint32_t size)
 
 // 
 
-void* Manager_GetUnitPtr (Manager* manager, uint32_t location)
+inline void* Manager_GetUnitPtr (Manager* manager, uint32_t location)
 {
 	return (uint8_t*)(manager->data) + (location * manager->stride);
 }
 
-void Manager_GetUnit (Manager* manager, uint32_t location, void* to)
+inline void Manager_GetUnit (Manager* manager, uint32_t location, void* to)
 {
 	memcpy(to, Manager_GetUnitPtr(manager, location), manager->stride);
 }
 
-void Manager_SetUnit (Manager* manager, uint32_t location, void* from)
+inline void Manager_SetUnit (Manager* manager, uint32_t location, void* from)
 {
 	memcpy(Manager_GetUnitPtr(manager, location), from, manager->stride);
 }

@@ -30,7 +30,7 @@
 		param_flags := $(param_flags) -O3 -mwindows
 	endif
 	ifeq ($(opt_target), Debug)
-		param_out := $(param_out)_debug
+		param_out := $(param_out)_Debug
 		param_flags := $(param_flags) -g
 	endif
 

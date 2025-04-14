@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <math.h>
 
 DotFrame* _DotFrame;
 SDLFrame* _SDLFrame;
@@ -37,7 +38,7 @@ void powder_logic (CellChunk* cell_chunk, Cell* cell, uint32_t x, uint32_t y)
 	}
 
 	Cell* cell_bottom = CellChunk_GetCell(cell_chunk, x, y + 1);
-	CellStats* cell_stats_bottom = Manager_GetUnitPtr(_DotFrame->cell_manager, cell_bottom->id);
+	CellStats* cell_stats_bottom = Manager_GetUnitPtr(&_DotFrame->cell_manager, cell_bottom->id);
 
 	if (cell_stats_bottom->is_empty == 1)
 	{
@@ -47,8 +48,8 @@ void powder_logic (CellChunk* cell_chunk, Cell* cell, uint32_t x, uint32_t y)
 
 	Cell* cell_left = CellChunk_GetCell(cell_chunk, x - 1, y + 1);
 	Cell* cell_right = CellChunk_GetCell(cell_chunk, x + 1, y + 1);
-	CellStats* cell_stats_left = Manager_GetUnitPtr(_DotFrame->cell_manager, cell_left->id);
-	CellStats* cell_stats_right = Manager_GetUnitPtr(_DotFrame->cell_manager, cell_right->id);
+	CellStats* cell_stats_left = Manager_GetUnitPtr(&_DotFrame->cell_manager, cell_left->id);
+	CellStats* cell_stats_right = Manager_GetUnitPtr(&_DotFrame->cell_manager, cell_right->id);
 
 	if (x > 0 && cell_stats_left->is_empty == 1)
 	{
@@ -71,84 +72,54 @@ void Init ()
 	// Initializing SDL Frame
 	SDLFrame_InitSDL(_SDLFrame);
 
-	// Initializing a Window
+	// Initializing a Window and a Renderer
 	const char* title = "Dot";
 	const uint32_t width = 800;
 	const uint32_t height = 600;
 	const SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE;
 
 	SDLFrame_CreateWindow(_SDLFrame, title, width, height, flags);
+	SDLFrame_CreateRenderer(_SDLFrame);
 
 	// Initializing Runner
-	Runner_SetTargetLPS(_DotFrame->runner, 60);
+	Runner_SetTargetLPS(&_DotFrame->runner, 60);
 
 	// Initializing CellChunk
-	CellChunk_Init(_DotFrame->cell_chunk, 32, 32);
-	CellChunk_SetCell(_DotFrame->cell_chunk, 10, 10, (Cell){CellID_Sand, 0xFFFF00FF});
+	CellChunk_Init(&_DotFrame->cell_chunk, 64, 128);
+	CellChunk_SetCell(&_DotFrame->cell_chunk, 10, 10, (Cell){CellID_Sand, 0xFFFF00FF});
 
 	// Initializing Managers
-	Manager_Init(_DotFrame->cell_manager, sizeof(CellStats) * 4, sizeof(CellStats));
+	Manager_Init(&_DotFrame->cell_manager, sizeof(CellStats) * 4, sizeof(CellStats));
 
 	{
-		CellStats* air_stats = Manager_GetUnitPtr(_DotFrame->cell_manager, 0);
+		CellStats* air_stats = Manager_GetUnitPtr(&_DotFrame->cell_manager, 0);
 		air_stats->id = 0;
 		air_stats->colors_v = NULL;
 		air_stats->colors_c = 0;
-		air_stats->is_update = 0;
-		air_stats->is_render = 0;
-		air_stats->is_empty = 1;
-		air_stats->is_solid = 0;
-		air_stats->is_powder = 0;
-		air_stats->is_fluid = 0;
+		air_stats->is_update = false;
+		air_stats->is_render = false;
+		air_stats->is_empty = true;
+		air_stats->is_solid = false;
+		air_stats->is_powder = false;
+		air_stats->is_fluid = false;
 		air_stats->method = NULL;
 	}
 
 	{
-		CellStats* sand_stats = Manager_GetUnitPtr(_DotFrame->cell_manager, 1);
+		CellStats* sand_stats = Manager_GetUnitPtr(&_DotFrame->cell_manager, 1);
 		sand_stats->id = 1;
 		sand_stats->colors_v = malloc(sizeof(uint32_t) * 4);
-			// sand_stats->colors_v[0] = 0xFFFF00FF;
-			// sand_stats->colors_v[1] = 0xFFFF10FF;
-			// sand_stats->colors_v[2] = 0xFFFF40FF;
-			// sand_stats->colors_v[3] = 0xFFBB00FF;
-			// sand_stats->colors_v[0] = 0xFFFF10FF;
-			// sand_stats->colors_v[2] = 0xFFFF80FF;
-			// sand_stats->colors_v[3] = 0xFFBB00FF;
-			// sand_stats->colors_v[0] = 0xFFDD00FF;
-			// sand_stats->colors_v[1] = 0xFFFF10FF;
-			// sand_stats->colors_v[2] = 0xFFFF50FF;
-			// sand_stats->colors_v[3] = 0xFFBB00FF;
-			// sand_stats->colors_v[0] = 0xFFFF00FF;
-			// sand_stats->colors_v[1] = 0xFFFF10FF;
-			// sand_stats->colors_v[2] = 0xFFFF50FF;
-			// sand_stats->colors_v[3] = 0xFFDD00FF;
-			// sand_stats->colors_v[0] = 0xFFFF00FF;
-			// sand_stats->colors_v[1] = 0xFFFF0FFF;
-			// sand_stats->colors_v[2] = 0xFFFFF0FF;
-			// sand_stats->colors_v[3] = 0xFFDD00FF;
-			// sand_stats->colors_v[0] = 0xFFEC80FF;
-			// sand_stats->colors_v[1] = 0xFFE657FF;
-			// sand_stats->colors_v[2] = 0xEBD767FF;
-			// sand_stats->colors_v[3] = 0xFFE030FF;
-			// sand_stats->colors_v[0] = 0xFFEC80FF;
-			// sand_stats->colors_v[1] = 0xFFE600FF;
-			// sand_stats->colors_v[2] = 0xEBD767FF;
-			// sand_stats->colors_v[3] = 0xFFE659FF;
-			// sand_stats->colors_v[0] = 0xFFEC80FF;
-			// sand_stats->colors_v[1] = 0xFFE640FF;
-			// sand_stats->colors_v[2] = 0xEBD767FF;
-			// sand_stats->colors_v[3] = 0xFFE659FF;
 			sand_stats->colors_v[0] = 0xFFEC80FF;
 			sand_stats->colors_v[1] = 0xFFE640FF;
 			sand_stats->colors_v[2] = 0xFFF29CFF;
 			sand_stats->colors_v[3] = 0xFFE659FF;
 		sand_stats->colors_c = 4;
-		sand_stats->is_update = 1;
-		sand_stats->is_render = 1;
-		sand_stats->is_empty = 0;
-		sand_stats->is_solid = 0;
-		sand_stats->is_powder = 1;
-		sand_stats->is_fluid = 0;
+		sand_stats->is_update = true;
+		sand_stats->is_render = true;
+		sand_stats->is_empty = false;
+		sand_stats->is_solid = false;
+		sand_stats->is_powder = true;
+		sand_stats->is_fluid = false;
 		sand_stats->method = powder_logic;
 	}
 }
@@ -156,13 +127,15 @@ void Init ()
 void Quit ()
 {
 	// Freeing Frames
+	SDLFrame_DeleteRenderer(_SDLFrame);
+	SDLFrame_DeleteWindow(_SDLFrame);
 	SDLFrame_QuitSDL(_SDLFrame);
 	DotFrame_Delete(_DotFrame);
 }
 
 void Loop ()
 {
-	Runner* runner = _DotFrame->runner;
+	Runner* runner = &_DotFrame->runner;
 
 	// Starting Dot Frame
 	DotFrame_Start(_DotFrame);
@@ -208,8 +181,12 @@ void ProcessEvents ()
 void Update ()
 {
 	// Update CellChunk
-	CellChunk_Update(_DotFrame->cell_chunk);
-	CellChunk_SetCell(_DotFrame->cell_chunk, 10, 10, Cell_CreateFromStats(Manager_GetUnitPtr(_DotFrame->cell_manager, CellID_Sand)));
+	CellChunk_Update(&_DotFrame->cell_chunk);
+	CellChunk_SetCell(&_DotFrame->cell_chunk,
+		32.0f + (cos(SDL_GetTicks() / 100.0f)) * 10.0f,
+		10,
+		Cell_CreateFromStats(
+			Manager_GetUnitPtr(&_DotFrame->cell_manager, CellID_Sand)));
 }
 
 void Render ()
@@ -220,7 +197,7 @@ void Render ()
 	SDL_RenderClear(renderer);
 
 	// Render CellChunk
-	CellChunk_Render(_DotFrame->cell_chunk, 10);
+	CellChunk_Render(&_DotFrame->cell_chunk, 4);
 
 	SDL_RenderPresent(renderer);
 }

@@ -156,6 +156,11 @@ void Loop ()
 		if (runner->loop_count % runner->lps_target == 0)
 		{
 			printf("FPS: %d\n", runner->lps_current);
+
+			char str[25];
+			sprintf((char*)&str, "Dot | FPS: %d", runner->lps_current);
+
+			SDL_SetWindowTitle(_SDLFrame->window, str);
 		}
 
 		// Delay

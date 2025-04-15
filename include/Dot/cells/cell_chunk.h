@@ -4,6 +4,7 @@
 #include <Dot/cells/cell.h>
 
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef struct CellChunk
 {
@@ -11,6 +12,13 @@ typedef struct CellChunk
 	uint32_t width;
 	uint32_t height;
 	uint32_t area;
+
+	// bool*    alive_cells_v;
+	// uint32_t alive_cells_c;
+	// bool*    alive_cells;
+	// uint32_t* timer_idle_cells;
+	CellState* cell_states;
+	uint32_t n_alive_cells;
 } CellChunk;
 
 void CellChunk_Init (CellChunk* chunk, uint32_t width, uint32_t height);
@@ -18,6 +26,7 @@ void CellChunk_Free (CellChunk* chunk);
 
 void CellChunk_Update (CellChunk* chunk);
 void CellChunk_Render (CellChunk* chunk, uint32_t scale);
+void CellChunk_RenderAliveState (CellChunk* cell_chunk, uint32_t scale);
 
 Cell* CellChunk_GetCell (CellChunk* chunk, uint32_t x, uint32_t y);
 void CellChunk_SetCell (CellChunk* chunk, uint32_t x, uint32_t y, Cell cell);

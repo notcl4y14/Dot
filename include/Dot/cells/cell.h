@@ -5,10 +5,11 @@
 #include <stdbool.h>
 
 struct Cell;
+struct CellState;
 struct CellStats;
 struct CellChunk;
 
-typedef void (*CellMethod) (struct CellChunk*, struct Cell* cell, uint32_t x, uint32_t y);
+typedef uint8_t (*CellMethod) (struct CellChunk*, struct Cell* cell, uint32_t x, uint32_t y);
 
 typedef enum CellID
 {
@@ -17,11 +18,18 @@ typedef enum CellID
 	CellID_Stone
 } CellID;
 
+typedef struct CellState
+{
+	uint32_t alive_counter;
+} CellState;
+
 typedef struct Cell
 {
 	uint8_t id;
 	uint32_t color;
 	bool fall;
+
+	CellState state;
 } Cell;
 
 typedef struct CellStats

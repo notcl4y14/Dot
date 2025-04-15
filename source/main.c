@@ -30,11 +30,11 @@ int32_t main (int32_t argc, char** argv)
 // 
 
 // TODO: Move this somewhere else
-void powder_logic (CellChunk* cell_chunk, Cell* cell, uint32_t x, uint32_t y)
+uint8_t powder_logic (CellChunk* cell_chunk, Cell* cell, uint32_t x, uint32_t y)
 {
 	if (y == cell_chunk->height - 1)
 	{
-		return;
+		return 1;
 	}
 
 	Cell* cell_bottom = CellChunk_GetCell(cell_chunk, x, y + 1);
@@ -43,7 +43,7 @@ void powder_logic (CellChunk* cell_chunk, Cell* cell, uint32_t x, uint32_t y)
 	if (cell_stats_bottom->is_empty == 1)
 	{
 		CellChunk_SwapCells(cell_chunk, x, y, x, y + 1);
-		return;
+		return 2;
 	}
 
 	Cell* cell_left = CellChunk_GetCell(cell_chunk, x - 1, y + 1);
@@ -54,13 +54,16 @@ void powder_logic (CellChunk* cell_chunk, Cell* cell, uint32_t x, uint32_t y)
 	if (x > 0 && cell_stats_left->is_empty == 1)
 	{
 		CellChunk_SwapCells(cell_chunk, x, y, x - 1, y + 1);
-		return;
+		return 2;
 	}
 
 	if (x < cell_chunk->width - 1 && cell_stats_right->is_empty == 1)
 	{
 		CellChunk_SwapCells(cell_chunk, x, y, x + 1, y + 1);
+		return 2;
 	}
+
+	return 1;
 }
 
 void Init ()
@@ -122,6 +125,13 @@ void Init ()
 		sand_stats->is_fluid = false;
 		sand_stats->method = powder_logic;
 	}
+
+	// for (int32_t i = 0; i < _DotFrame->cell_chunk.area; i++)
+	// {
+	// 	_DotFrame->cell_chunk.cells[i] =
+	// 		Cell_CreateFromStats(
+	// 			Manager_GetUnitPtr(&_DotFrame->cell_manager, CellID_Sand));
+	// }
 }
 
 void Quit ()
@@ -192,6 +202,16 @@ void Update ()
 		10,
 		Cell_CreateFromStats(
 			Manager_GetUnitPtr(&_DotFrame->cell_manager, CellID_Sand)));
+
+	// if (_DotFrame->tick_count % 2 != 0)
+	// 	return;
+
+	// CellStats* const stats = Manager_GetUnitPtr(&_DotFrame->cell_manager, CellID_Sand);
+	// for (int32_t i = 0; i < _DotFrame->cell_chunk.area; i++)
+	// {
+	// 	_DotFrame->cell_chunk.cells[i] =
+	// 		Cell_CreateFromStats(stats);
+	// }
 }
 
 void Render ()
@@ -202,6 +222,7 @@ void Render ()
 	SDL_RenderClear(renderer);
 
 	// Render CellChunk
+	// CellChunk_RenderAliveState(&_DotFrame->cell_chunk, 4);
 	CellChunk_Render(&_DotFrame->cell_chunk, 4);
 
 	SDL_RenderPresent(renderer);

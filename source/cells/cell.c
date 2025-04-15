@@ -11,6 +11,8 @@ void Cell_Init (Cell* cell, uint8_t id, uint32_t color, bool fall)
 	cell->id = id;
 	cell->color = color;
 	cell->fall = fall;
+
+	cell->state.alive_counter = 0;
 }
 
 void Cell_Free (Cell* cell)
@@ -18,6 +20,8 @@ void Cell_Free (Cell* cell)
 	cell->id = 0;
 	cell->color = 0x00000000;
 	cell->fall = false;
+	
+	cell->state.alive_counter = 0;
 }
 
 Cell Cell_CreateFromStats (CellStats* cell_stats)

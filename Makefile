@@ -1,5 +1,5 @@
 CC := gcc
-PARAMS := -g -o build/Dot $(wildcard source/*.c) -Iinclude
+PARAMS := -g -o build/Dot $(wildcard source/*.c) -Iinclude -Iexternal/CSFML/include -Lexternal/CSFML/bin -lcsfml-window-2
 
 setup:
 	@echo Creating required directories...

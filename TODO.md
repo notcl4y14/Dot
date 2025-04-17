@@ -1,9 +1,9 @@
 # TODO
 
-- [ ] Setting up the project
+- [x] Setting up the project
 	+ [x] Create an application struct
 	+ [x] Create a loop runner struct
-	+ [ ] Choose a game library and create an application struct for it too
+	+ [x] Choose a game library and create an application struct for it too
 
 - [ ] Cell stuff
 	+ [ ] Create a cell struct (have only ID)

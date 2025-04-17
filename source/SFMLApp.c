@@ -1,6 +1,6 @@
 #include <Dot/SFMLApp.h>
 
-#include <SFML/Window.h>
+#include <SFML/Graphics.h>
 
 void SFMLApp_Create (SFMLApp* sfml)
 {

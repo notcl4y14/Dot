@@ -1,14 +1,14 @@
 #ifndef DOT_SFMLAPP_H
 #define DOT_SFMLAPP_H
 
-#include <SFML/Window.h>
+#include <SFML/Graphics.h>
 
 struct         SFMLApp;
 typedef struct SFMLApp SFMLApp;
 
 struct SFMLApp
 {
-	sfWindow* window;
+	sfRenderWindow* window;
 	sfEvent event;
 };
 

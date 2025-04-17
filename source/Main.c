@@ -2,7 +2,8 @@
 #include <Dot/DotApp.h>
 #include <Dot/SFMLApp.h>
 
-#include <SFML/Window.h>
+#include <SFML/Graphics.h>
+#include <SFML/System.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,28 +34,66 @@ void Main_Setup ()
 	SFMLApp_Create(Dot_SFMLApp);
 
 	// Create Window
-	Dot_SFMLApp->window = sfWindow_create(
+	Dot_SFMLApp->window = sfRenderWindow_create(
 		(sfVideoMode) {800, 600},
 		"Dot",
 		sfDefaultStyle,
 		NULL);
+
+	// Initialize loop managers
+	Dot_DotApp->loop.lps_target = 60;
+	Dot_DotApp->loop.loop_count = 0;
 }
 
 void Main_Loop ()
 {
-	sfWindow* sfml_window = Dot_SFMLApp->window;
+	sfRenderWindow* sfml_window = Dot_SFMLApp->window;
 	sfEvent* sfml_event = &(Dot_SFMLApp->event);
 
-	while (sfWindow_isOpen(sfml_window) == true)
+	sfClock* sfml_clock = sfClock_create();
+	sfTime sfml_time;
+
+	Dot_DotApp->loop.enabled = true;
+
+	while (sfRenderWindow_isOpen(sfml_window) == true)
 	{
-		while (sfWindow_pollEvent(sfml_window, sfml_event))
+		// Process Events
+		while (sfRenderWindow_pollEvent(sfml_window, sfml_event))
 		{
 			if (sfml_event->type == sfEvtClosed)
 			{
-				sfWindow_close(sfml_window);
+				sfRenderWindow_close(sfml_window);
 			}
 		}
+
+		// Update
+		// Render
+
+		// Draw
+		sfRenderWindow_clear(sfml_window, sfBlack);
+		sfRenderWindow_display(sfml_window);
+
+		// Tick
+		Dot_DotApp->loop.loop_count++;
+		Dot_DotApp->loop.lps_counter++;
+
+		sfml_time = sfClock_getElapsedTime(sfml_clock);
+
+		if (sfTime_asMilliseconds(sfml_time) >= Dot_DotApp->loop.lps_update_time)
+		{
+			Dot_DotApp->loop.lps_current = Dot_DotApp->loop.lps_counter;
+			Dot_DotApp->loop.lps_counter = 0;
+			Dot_DotApp->loop.lps_update_time += 1000;
+
+			printf("FPS: %d\n", Dot_DotApp->loop.lps_current);
+		}
+
+		// Delay
+		sfml_time = sfMilliseconds(1000 / Dot_DotApp->loop.lps_target);
+		sfSleep(sfml_time);
 	}
+
+	sfClock_destroy(sfml_clock);
 }
 
 void Main_Quit ()

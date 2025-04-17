@@ -2,19 +2,20 @@
 #include <Dot/DotApp.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
 
-DotApp* _DotApp;
+DotApp* Dot_DotApp;
 
 int32_t main (int32_t argc, char** argv)
 {
 	printf("Hello World!\n");
 
-	_DotApp = malloc(sizeof (DotApp));
-	DotApp_create(_DotApp);
+	Dot_DotApp = malloc(sizeof (DotApp));
+	DotApp_Create(Dot_DotApp);
 
-	printf("_DotApp->is_running = %d\n", _DotApp->is_running);
+	printf("_DotApp->is_running = %d\n", Dot_DotApp->is_running);
 
-	DotApp_delete(_DotApp);
+	DotApp_Delete(Dot_DotApp);
 	return 0;
 }

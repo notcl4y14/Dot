@@ -12,10 +12,7 @@ struct DotApp
 	bool is_running;
 };
 
-void DotApp_create (DotApp* dot);
-void DotApp_delete (DotApp* dot);
-
-DotApp* DotApp_create_a (DotApp* dot);
-void DotApp_delete_a (DotApp* dot);
+void DotApp_Create (DotApp* dot);
+void DotApp_Delete (DotApp* dot);;
 
 #endif

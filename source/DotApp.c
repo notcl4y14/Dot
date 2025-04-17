@@ -9,6 +9,7 @@ void DotApp_Create (DotApp* dot)
 {
 	dot->is_running = false;
 
+	CellChunk_Create(&dot->cell_chunk);
 	LoopManager_Create(&dot->loop);
 }
 
@@ -16,5 +17,6 @@ void DotApp_Delete (DotApp* dot)
 {
 	dot->is_running = false;
 
+	CellChunk_Delete(&dot->cell_chunk);
 	LoopManager_Delete(&dot->loop);
 }

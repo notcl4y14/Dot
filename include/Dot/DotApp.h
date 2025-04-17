@@ -1,6 +1,7 @@
 #ifndef DOT_DOTAPP_H
 #define DOT_DOTAPP_H
 
+#include <Dot/CellChunk.h>
 #include <Dot/LoopManager.h>
 
 #include <stdint.h>
@@ -13,6 +14,7 @@ struct DotApp
 {
 	bool is_running;
 
+	CellChunk   cell_chunk;
 	LoopManager loop;
 };
 

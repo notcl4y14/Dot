@@ -1,4 +1,5 @@
 #include <Dot/Main.h>
+#include <Dot/CellChunk.h>
 #include <Dot/DotApp.h>
 #include <Dot/SFMLApp.h>
 
@@ -40,6 +41,9 @@ void Main_Setup ()
 		sfDefaultStyle,
 		NULL);
 
+	// Initialize cell chunk
+	CellChunk_Init(&(Dot_DotApp->cell_chunk), 32, 32);
+
 	// Initialize loop managers
 	Dot_DotApp->loop.lps_target = 60;
 	Dot_DotApp->loop.loop_count = 0;
@@ -69,8 +73,18 @@ void Main_Loop ()
 		// Update
 		// Render
 
+		CellChunk_Update(&(Dot_DotApp->cell_chunk));
+
+		{
+			Cell cell = (Cell) {1};
+			CellChunk_SetCell(&(Dot_DotApp->cell_chunk), 16, 0, cell);
+		}
+
 		// Draw
 		sfRenderWindow_clear(sfml_window, sfBlack);
+
+		CellChunk_Render(&(Dot_DotApp->cell_chunk));
+
 		sfRenderWindow_display(sfml_window);
 
 		// Tick

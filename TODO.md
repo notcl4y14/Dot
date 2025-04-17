@@ -6,9 +6,9 @@
 	+ [x] Choose a game library and create an application struct for it too
 
 - [ ] Cell stuff
-	+ [ ] Create a cell struct (have only ID)
-	+ [ ] Create a cell array struct (cell chunk)
-	+ [ ] Test if it works by implementing simple sand physics and rendering
+	+ [x] Create a cell struct (have only ID)
+	+ [x] Create a cell array struct (cell chunk)
+	+ [x] Test if it works by implementing simple sand physics and rendering
 	+ [ ] Create a cell ID options struct
 	+ [ ] Create a resource manager struct (TODO: Resource Manager)
 	+ [ ] Implement resource manager for cells

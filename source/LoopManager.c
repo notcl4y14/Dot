@@ -25,5 +25,15 @@ void LoopManager_Delete (LoopManager* lm)
 
 void LoopManager_Tick (LoopManager* lm)
 {
-	return;
+	// lm.loop_count++;
+	// lm.lps_counter++;
+
+	// sfml_time = sfClock_getElapsedTime(sfml_clock);
+
+	// if (sfTime_asMilliseconds(sfml_time) >= lm.lps_update_time)
+	// {
+	// 	lm.lps_current = lm.lps_counter;
+	// 	lm.lps_counter = 0;
+	// 	lm.lps_update_time += 1000;
+	// }
 }

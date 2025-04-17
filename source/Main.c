@@ -2,6 +2,7 @@
 #include <Dot/CellChunk.h>
 #include <Dot/DotApp.h>
 #include <Dot/SFMLApp.h>
+#include <Dot/System.h>
 
 #include <SFML/Graphics.h>
 #include <SFML/System.h>
@@ -26,6 +27,8 @@ int32_t main (int32_t argc, char** argv)
 
 void Main_Setup ()
 {
+	System_Init();
+
 	// Allocate global variables
 	Dot_DotApp = malloc(sizeof (DotApp));
 	Dot_SFMLApp = malloc(sizeof (SFMLApp));
@@ -54,10 +57,8 @@ void Main_Loop ()
 	sfRenderWindow* sfml_window = Dot_SFMLApp->window;
 	sfEvent* sfml_event = &(Dot_SFMLApp->event);
 
-	sfClock* sfml_clock = sfClock_create();
-	sfTime sfml_time;
-
 	Dot_DotApp->loop.enabled = true;
+	Dot_DotApp->loop.lps_update_time = System_GetTimeMS();
 
 	while (sfRenderWindow_isOpen(sfml_window) == true)
 	{
@@ -91,9 +92,9 @@ void Main_Loop ()
 		Dot_DotApp->loop.loop_count++;
 		Dot_DotApp->loop.lps_counter++;
 
-		sfml_time = sfClock_getElapsedTime(sfml_clock);
+		uint64_t elapsed_time = System_GetTimeMS();
 
-		if (sfTime_asMilliseconds(sfml_time) >= Dot_DotApp->loop.lps_update_time)
+		if (elapsed_time >= Dot_DotApp->loop.lps_update_time)
 		{
 			Dot_DotApp->loop.lps_current = Dot_DotApp->loop.lps_counter;
 			Dot_DotApp->loop.lps_counter = 0;
@@ -103,11 +104,8 @@ void Main_Loop ()
 		}
 
 		// Delay
-		sfml_time = sfMilliseconds(1000 / Dot_DotApp->loop.lps_target);
-		sfSleep(sfml_time);
+		System_SleepMS(1000 / Dot_DotApp->loop.lps_target);
 	}
-
-	sfClock_destroy(sfml_clock);
 }
 
 void Main_Quit ()

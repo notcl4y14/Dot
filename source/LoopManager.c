@@ -1,4 +1,5 @@
 #include <Dot/LoopManager.h>
+#include <Dot/System.h>
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -25,15 +26,15 @@ void LoopManager_Delete (LoopManager* lm)
 
 void LoopManager_Tick (LoopManager* lm)
 {
-	// lm.loop_count++;
-	// lm.lps_counter++;
+	lm->loop_count++;
+	lm->lps_counter++;
 
-	// sfml_time = sfClock_getElapsedTime(sfml_clock);
+	uint32_t const elapsed_time = System_GetTimeMS();
 
-	// if (sfTime_asMilliseconds(sfml_time) >= lm.lps_update_time)
-	// {
-	// 	lm.lps_current = lm.lps_counter;
-	// 	lm.lps_counter = 0;
-	// 	lm.lps_update_time += 1000;
-	// }
+	if (elapsed_time >= lm->lps_update_time)
+	{
+		lm->lps_current = lm->lps_counter;
+		lm->lps_counter = 0;
+		lm->lps_update_time += 1000;
+	}
 }

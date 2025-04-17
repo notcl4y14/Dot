@@ -54,58 +54,40 @@ void Main_Setup ()
 
 void Main_Loop ()
 {
-	sfRenderWindow* sfml_window = Dot_SFMLApp->window;
-	sfEvent* sfml_event = &(Dot_SFMLApp->event);
+	sfRenderWindow* const sfml_window = Dot_SFMLApp->window;
+	LoopManager* const dot_loop = &(Dot_DotApp->loop);
 
+	Dot_DotApp->is_running = true;
 	Dot_DotApp->loop.enabled = true;
 	Dot_DotApp->loop.lps_update_time = System_GetTimeMS();
 
-	while (sfRenderWindow_isOpen(sfml_window) == true)
+	while (Dot_DotApp->is_running)
 	{
 		// Process Events
-		while (sfRenderWindow_pollEvent(sfml_window, sfml_event))
-		{
-			if (sfml_event->type == sfEvtClosed)
-			{
-				sfRenderWindow_close(sfml_window);
-			}
-		}
+		Main_ProcessEvts();
 
 		// Update
 		// Render
-
-		CellChunk_Update(&(Dot_DotApp->cell_chunk));
-
-		{
-			Cell cell = (Cell) {1};
-			CellChunk_SetCell(&(Dot_DotApp->cell_chunk), 16, 0, cell);
-		}
-
-		// Draw
-		sfRenderWindow_clear(sfml_window, sfBlack);
-
-		CellChunk_Render(&(Dot_DotApp->cell_chunk));
-
-		sfRenderWindow_display(sfml_window);
+		Main_Update();
+		Main_Render();
 
 		// Tick
-		Dot_DotApp->loop.loop_count++;
-		Dot_DotApp->loop.lps_counter++;
+		uint32_t const elapsed_time = System_GetTimeMS();
+		bool const should_render_fps = (elapsed_time >= dot_loop->lps_update_time);
 
-		uint64_t elapsed_time = System_GetTimeMS();
+		LoopManager_Tick(dot_loop);
 
-		if (elapsed_time >= Dot_DotApp->loop.lps_update_time)
+		if (should_render_fps == true)
 		{
-			Dot_DotApp->loop.lps_current = Dot_DotApp->loop.lps_counter;
-			Dot_DotApp->loop.lps_counter = 0;
-			Dot_DotApp->loop.lps_update_time += 1000;
-
-			printf("FPS: %d\n", Dot_DotApp->loop.lps_current);
+			printf("FPS: %d\n", dot_loop->lps_current);
 		}
 
 		// Delay
-		System_SleepMS(1000 / Dot_DotApp->loop.lps_target);
+		uint32_t const sleep_time = (1000 / Dot_DotApp->loop.lps_target);
+		System_SleepMS(sleep_time);
 	}
+
+	sfRenderWindow_close(sfml_window);
 }
 
 void Main_Quit ()
@@ -121,4 +103,43 @@ void Main_Quit ()
 	// Set global variables' pointers to NULL
 	Dot_DotApp = NULL;
 	Dot_SFMLApp = NULL;
+}
+
+void Main_ProcessEvts ()
+{
+	sfRenderWindow* const sfml_window = Dot_SFMLApp->window;
+	sfEvent* const sfml_event = &(Dot_SFMLApp->event);
+
+	while (sfRenderWindow_pollEvent(sfml_window, sfml_event))
+	{
+		if (sfml_event->type == sfEvtClosed)
+		{
+			Dot_DotApp->is_running = false;
+		}
+	}
+}
+
+void Main_Update ()
+{
+	CellChunk* const cell_chunk = &(Dot_DotApp->cell_chunk);
+
+	CellChunk_Update(cell_chunk);
+
+	// Add sand cell each tick
+	{
+		Cell cell = (Cell) {1};
+		CellChunk_SetCell(cell_chunk, 16, 0, cell);
+	}
+}
+
+void Main_Render ()
+{
+	sfRenderWindow* const sfml_window = Dot_SFMLApp->window;
+	CellChunk* const cell_chunk = &(Dot_DotApp->cell_chunk);
+
+	sfRenderWindow_clear(sfml_window, sfBlack);
+
+	CellChunk_Render(cell_chunk);
+
+	sfRenderWindow_display(sfml_window);
 }

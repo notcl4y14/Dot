@@ -5,4 +5,7 @@
 
 int32_t main (int32_t argc, char** argv);
 
+void Main_Setup ();
+void Main_Quit ();
+
 #endif

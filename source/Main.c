@@ -9,10 +9,30 @@ DotApp* Dot_DotApp;
 
 int32_t main (int32_t argc, char** argv)
 {
-	Dot_DotApp = malloc(sizeof (DotApp));
-	DotApp_Create(Dot_DotApp);
+	Main_Setup();
+	
+	Main_Quit();
 
-	DotApp_Delete(Dot_DotApp);
-	free(Dot_DotApp);
 	return 0;
+}
+
+void Main_Setup ()
+{
+	// Allocate global variables
+	Dot_DotApp = malloc(sizeof (DotApp));
+
+	// Initialize global variables
+	DotApp_Create(Dot_DotApp);
+}
+
+void Main_Quit ()
+{
+	// Delete global variables
+	DotApp_Delete(Dot_DotApp);
+
+	// Free global variables
+	free(Dot_DotApp);
+
+	// Set global variables' pointers to NULL
+	Dot_DotApp = NULL;
 }

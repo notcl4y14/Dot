@@ -2,7 +2,7 @@
 
 - [ ] Setting up the project
 	+ [x] Create an application struct
-	+ [ ] Create a loop runner struct
+	+ [x] Create a loop runner struct
 	+ [ ] Choose a game library and create an application struct for it too
 
 - [ ] Cell stuff

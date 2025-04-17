@@ -1,7 +1,7 @@
 # TODO
 
 - [ ] Setting up the project
-	+ [ ] Create an application struct
+	+ [x] Create an application struct
 	+ [ ] Create a loop runner struct
 	+ [ ] Choose a game library and create an application struct for it too
 

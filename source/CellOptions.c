@@ -12,6 +12,7 @@ void CellOptions_Create (CellOptions* cell_opt)
 	cell_opt->is_solid = false;
 	cell_opt->is_powder = false;
 	cell_opt->is_fluid = false;
+	cell_opt->update_method = NULL;
 }
 
 void CellOptions_Delete (CellOptions* cell_opt)
@@ -23,4 +24,5 @@ void CellOptions_Delete (CellOptions* cell_opt)
 	cell_opt->is_solid = false;
 	cell_opt->is_powder = false;
 	cell_opt->is_fluid = false;
+	cell_opt->update_method = NULL;
 }

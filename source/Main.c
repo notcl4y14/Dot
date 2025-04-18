@@ -1,5 +1,6 @@
 #include <Dot/Main.h>
 #include <Dot/CellChunk.h>
+#include <Dot/CellOptions.h>
 #include <Dot/DotApp.h>
 #include <Dot/SFMLApp.h>
 #include <Dot/System.h>
@@ -47,6 +48,9 @@ void Main_Setup ()
 
 	// Initialize cell chunk
 	CellChunk_Init(&(Dot_DotApp->cell_chunk), 32, 32);
+
+	// Initialize resource managers
+	ResManager_Init(&(Dot_DotApp->cell_opt_manager), 4, sizeof(CellOptions));
 
 	// Initialize loop managers
 	Dot_DotApp->loop.lps_target = 60;
@@ -108,6 +112,8 @@ void Main_Quit ()
 
 void Main_Load ()
 {
+	#include <Dot/CellUpdateMethod.h>
+
 	CellOptions air_cell_opt =
 	{
 		.id = 0,
@@ -117,6 +123,7 @@ void Main_Load ()
 		.is_solid = false,
 		.is_powder = false,
 		.is_fluid = false,
+		.update_method = NULL,
 	};
 
 	CellOptions sand_cell_opt =
@@ -128,6 +135,7 @@ void Main_Load ()
 		.is_solid = false,
 		.is_powder = true,
 		.is_fluid = false,
+		.update_method = _CellUpdateMethod_Powder,
 	};
 
 	DotApp_LoadCellOptions(Dot_DotApp, 0, air_cell_opt);

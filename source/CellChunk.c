@@ -44,42 +44,6 @@ inline void CellChunk_SetCell (CellChunk* cell_chunk, int32_t x, int32_t y, Cell
 	cell_chunk->cells[x + y * cell_chunk->width] = cell;
 }
 
-void update_sand (CellChunk* cell_chunk, Cell* cell, int32_t x, int32_t y)
-{
-	if (y == cell_chunk->height - 1)
-	{
-		return;
-	}
-
-	Cell* bottom_cell = CellChunk_GetCell(cell_chunk, x, y + 1);
-	Cell* left_cell = CellChunk_GetCell(cell_chunk, x - 1, y + 1);
-	Cell* right_cell = CellChunk_GetCell(cell_chunk, x + 1, y + 1);
-
-	if (bottom_cell->id == 0)
-	{
-		Cell air = (Cell) {0};
-		CellChunk_SetCell(cell_chunk, x, y + 1, *cell);
-		CellChunk_SetCell(cell_chunk, x, y, air);
-		return;
-	}
-
-	if (left_cell->id == 0)
-	{
-		Cell air = (Cell) {0};
-		CellChunk_SetCell(cell_chunk, x - 1, y + 1, *cell);
-		CellChunk_SetCell(cell_chunk, x, y, air);
-		return;
-	}
-
-	if (right_cell->id == 0)
-	{
-		Cell air = (Cell) {0};
-		CellChunk_SetCell(cell_chunk, x + 1, y + 1, *cell);
-		CellChunk_SetCell(cell_chunk, x, y, air);
-		return;
-	}
-}
-
 void CellChunk_Update (CellChunk* cell_chunk)
 {
 	for (int32_t x = 0; x < cell_chunk->width; x++)
@@ -87,16 +51,14 @@ void CellChunk_Update (CellChunk* cell_chunk)
 		for (int32_t y = cell_chunk->height - 1; y >= 0; y--)
 		{
 			Cell* const cell = CellChunk_GetCell(cell_chunk, x, y);
+			CellOptions* const cell_opt = DotApp_GetCellOptions(Dot_DotApp, cell->id);
 
-			if (cell->id == 0)
+			if (cell_opt->should_update == false)
 			{
 				continue;
 			}
 
-			if (cell->id == 1)
-			{
-				update_sand(cell_chunk, cell, x, y);
-			}
+			cell_opt->update_method(cell_chunk, cell, x, y);
 		}
 	}
 }

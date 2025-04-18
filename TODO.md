@@ -13,7 +13,7 @@
 	+ [x] Create a resource manager struct (TODO: Resource Manager)
 	+ [x] Implement resource manager for cells
 	+ [x] Create a few cell ID-s for cell resource manager
-	+ [ ] Implement custom update methods for cells
+	+ [x] Implement custom update methods for cells
 	+ [ ] Implement input for placing/removing cells just for fun
 
 	- [x] Resource Manager

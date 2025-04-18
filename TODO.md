@@ -5,7 +5,7 @@
 	+ [x] Create a loop runner struct
 	+ [x] Choose a game library and create an application struct for it too
 
-- [ ] Cell stuff
+- [x] Cell stuff
 	+ [x] Create a cell struct (have only ID)
 	+ [x] Create a cell array struct (cell chunk)
 	+ [x] Test if it works by implementing simple sand physics and rendering
@@ -14,7 +14,7 @@
 	+ [x] Implement resource manager for cells
 	+ [x] Create a few cell ID-s for cell resource manager
 	+ [x] Implement custom update methods for cells
-	+ [ ] Implement input for placing/removing cells just for fun
+	+ [x] Implement input for placing/removing cells just for fun
 
 	- [x] Resource Manager
 		+ [x] Create a resource manager struct and methods for it

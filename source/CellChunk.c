@@ -81,8 +81,8 @@ void CellChunk_Render (CellChunk* cell_chunk)
 			sfRectangleShape_setFillColor(sfml_rectangle, sfYellow);
 		}
 
-		sfRectangleShape_setPosition(sfml_rectangle, (sfVector2f) {i % cell_chunk->width * 2, i / cell_chunk->width * 2});
-		sfRectangleShape_setSize(sfml_rectangle, (sfVector2f) {2, 2});
+		sfRectangleShape_setPosition(sfml_rectangle, (sfVector2f) {i % cell_chunk->width * 4, i / cell_chunk->width * 4});
+		sfRectangleShape_setSize(sfml_rectangle, (sfVector2f) {4, 4});
 
 		sfRenderWindow_drawRectangleShape(Dot_SFMLApp->window, sfml_rectangle, NULL);
 	}

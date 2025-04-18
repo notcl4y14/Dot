@@ -1,4 +1,5 @@
 #include <Dot/Main.h>
+#include <Dot/CellBrush.h>
 #include <Dot/CellChunk.h>
 #include <Dot/CellOptions.h>
 #include <Dot/DotApp.h>
@@ -14,6 +15,10 @@
 
 DotApp* Dot_DotApp;
 SFMLApp* Dot_SFMLApp;
+
+int32_t cellbrush_x = 0;
+int32_t cellbrush_y = 0;
+int32_t cellbrush_size = 8;
 
 int32_t main (int32_t argc, char** argv)
 {
@@ -163,9 +168,54 @@ void Main_Update ()
 	CellChunk_Update(cell_chunk);
 
 	// Add sand cell each tick
+	// {
+	// 	Cell cell = (Cell) {1};
+	// 	CellChunk_SetCell(cell_chunk, 16, 0, cell);
+	// }
+
+	// Update CellBrush
+	if (sfKeyboard_isKeyPressed(sfKeyLeft))
 	{
-		Cell cell = (Cell) {1};
-		CellChunk_SetCell(cell_chunk, 16, 0, cell);
+		cellbrush_x -= 1;
+	}
+	if (sfKeyboard_isKeyPressed(sfKeyRight))
+	{
+		cellbrush_x += 1;
+	}
+	if (sfKeyboard_isKeyPressed(sfKeyUp))
+	{
+		cellbrush_y -= 1;
+	}
+	if (sfKeyboard_isKeyPressed(sfKeyDown))
+	{
+		cellbrush_y += 1;
+	}
+
+	// cellbrush_x = cellbrush_x < 0
+	//             ? 0
+	//             : cellbrush_x > cell_chunk->width - cellbrush_size
+	// 	            ? cell_chunk->width - cellbrush_size
+	// 	            : cellbrush_x;
+
+	// cellbrush_y = cellbrush_y < 0
+	//             ? 0
+	//             : cellbrush_y > cell_chunk->height - cellbrush_size
+	// 	            ? cell_chunk->height - cellbrush_size
+	// 	            : cellbrush_y;
+
+	     if (cellbrush_x < 0) cellbrush_x = 0;
+	else if (cellbrush_x > cell_chunk->width - cellbrush_size) cellbrush_x = cell_chunk->width - cellbrush_size;
+
+	     if (cellbrush_y < 0) cellbrush_y = 0;
+	else if (cellbrush_y > cell_chunk->height - cellbrush_size) cellbrush_y = cell_chunk->height - cellbrush_size;
+
+	if (sfKeyboard_isKeyPressed(sfKeySpace))
+	{
+		CellBrush_Rectangle(cell_chunk, cellbrush_x, cellbrush_y, cellbrush_size, cellbrush_size, (Cell){1});
+	}
+	if (sfKeyboard_isKeyPressed(sfKeyZ))
+	{
+		CellBrush_Rectangle(cell_chunk, cellbrush_x, cellbrush_y, cellbrush_size, cellbrush_size, (Cell){0});
 	}
 }
 
@@ -177,6 +227,18 @@ void Main_Render ()
 	sfRenderWindow_clear(sfml_window, sfBlack);
 
 	CellChunk_Render(cell_chunk);
+
+	// Render CellBrush
+	{
+		sfRectangleShape* rect = sfRectangleShape_create();
+		sfRectangleShape_setPosition(rect, (sfVector2f) {cellbrush_x * 4, cellbrush_y * 4});
+		sfRectangleShape_setSize(rect, (sfVector2f) {cellbrush_size * 4, cellbrush_size * 4});
+		sfRectangleShape_setFillColor(rect, (sfColor){255, 255, 255, 255 / 4});
+
+		sfRenderWindow_drawRectangleShape(sfml_window, rect, NULL);
+
+		sfRectangleShape_destroy(rect);
+	}
 
 	sfRenderWindow_display(sfml_window);
 }

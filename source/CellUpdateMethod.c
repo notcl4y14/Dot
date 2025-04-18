@@ -28,7 +28,7 @@ uint32_t _CellUpdateMethod_Powder (CellChunk* cell_chunk, Cell* cell, uint32_t x
 	CellOptions* const left_cell_opt = DotApp_GetCellOptions(Dot_DotApp, left_cell->id);
 	CellOptions* const right_cell_opt = DotApp_GetCellOptions(Dot_DotApp, right_cell->id);
 
-	if (left_cell_opt->is_empty == true)
+	if (x > 0 && left_cell_opt->is_empty == true)
 	{
 		Cell air = {0};
 		CellChunk_SetCell(cell_chunk, x - 1, y + 1, *cell);
@@ -36,7 +36,7 @@ uint32_t _CellUpdateMethod_Powder (CellChunk* cell_chunk, Cell* cell, uint32_t x
 		return 0;
 	}
 
-	if (right_cell_opt->is_empty == true)
+	if (x < cell_chunk->width - 1 && right_cell_opt->is_empty == true)
 	{
 		Cell air = {0};
 		CellChunk_SetCell(cell_chunk, x + 1, y + 1, *cell);

@@ -9,16 +9,16 @@
 	+ [x] Create a cell struct (have only ID)
 	+ [x] Create a cell array struct (cell chunk)
 	+ [x] Test if it works by implementing simple sand physics and rendering
-	+ [ ] Create a cell ID options struct
-	+ [ ] Create a resource manager struct (TODO: Resource Manager)
+	+ [x] Create a cell ID options struct
+	+ [x] Create a resource manager struct (TODO: Resource Manager)
 	+ [ ] Implement resource manager for cells
 	+ [ ] Create a few cell ID-s for cell resource manager
 	+ [ ] Implement custom update methods for cells
 	+ [ ] Implement input for placing/removing cells just for fun
 
-	- [ ] Resource Manager
-		+ [ ] Create a resource manager struct and methods for it
-		+ [ ] Yup, that's it, I suppose
+	- [x] Resource Manager
+		+ [x] Create a resource manager struct and methods for it
+		+ [x] Yup, that's it, I suppose
 
 - [ ] Advancing cells
 	+ [ ] Implement double-buffering for cell array

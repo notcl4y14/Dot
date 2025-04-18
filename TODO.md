@@ -11,8 +11,8 @@
 	+ [x] Test if it works by implementing simple sand physics and rendering
 	+ [x] Create a cell ID options struct
 	+ [x] Create a resource manager struct (TODO: Resource Manager)
-	+ [ ] Implement resource manager for cells
-	+ [ ] Create a few cell ID-s for cell resource manager
+	+ [x] Implement resource manager for cells
+	+ [x] Create a few cell ID-s for cell resource manager
 	+ [ ] Implement custom update methods for cells
 	+ [ ] Implement input for placing/removing cells just for fun
 

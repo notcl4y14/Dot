@@ -1,6 +1,8 @@
 #include <Dot/ResManager.h>
 
+#include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 
 void ResManager_Create (ResManager* rm)
 {
@@ -32,7 +34,7 @@ void ResManager_Init (ResManager* rm, uint32_t capacity, uint32_t unit_size)
 }
 void ResManager_Resize (ResManager* rm, uint32_t capacity)
 {
-	uint32_t const data_size = capacity * unit_size;
+	uint32_t const data_size = capacity * rm->unit_size;
 	rm->data = realloc(rm->data, data_size);
 	rm->capacity = capacity;
 	rm->data_size = data_size;

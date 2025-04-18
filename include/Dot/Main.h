@@ -15,6 +15,8 @@ void Main_Setup ();
 void Main_Loop ();
 void Main_Quit ();
 
+void Main_Load ();
+
 void Main_ProcessEvts ();
 void Main_Update ();
 void Main_Render ();

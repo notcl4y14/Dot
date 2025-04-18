@@ -17,6 +17,7 @@ SFMLApp* Dot_SFMLApp;
 int32_t main (int32_t argc, char** argv)
 {
 	Main_Setup();
+	Main_Load();
 
 	Main_Loop();
 
@@ -103,6 +104,34 @@ void Main_Quit ()
 	// Set global variables' pointers to NULL
 	Dot_DotApp = NULL;
 	Dot_SFMLApp = NULL;
+}
+
+void Main_Load ()
+{
+	CellOptions air_cell_opt =
+	{
+		.id = 0,
+		.should_update = false,
+		.should_render = false,
+		.is_empty = true,
+		.is_solid = false,
+		.is_powder = false,
+		.is_fluid = false,
+	};
+
+	CellOptions sand_cell_opt =
+	{
+		.id = 1,
+		.should_update = true,
+		.should_render = true,
+		.is_empty = false,
+		.is_solid = false,
+		.is_powder = true,
+		.is_fluid = false,
+	};
+
+	DotApp_LoadCellOptions(Dot_DotApp, 0, air_cell_opt);
+	DotApp_LoadCellOptions(Dot_DotApp, 1, sand_cell_opt);
 }
 
 void Main_ProcessEvts ()

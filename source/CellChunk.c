@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 
 void CellChunk_Create (CellChunk* cell_chunk)
 {
@@ -46,21 +47,37 @@ inline void CellChunk_SetCell (CellChunk* cell_chunk, int32_t x, int32_t y, Cell
 
 void CellChunk_Update (CellChunk* cell_chunk)
 {
-	for (int32_t x = 0; x < cell_chunk->width; x++)
+	uint32_t const cc_width = cell_chunk->width;
+	uint32_t const cc_height = cell_chunk->height;
+
+	// This kind of approach seems bad, unless the chunk is small...
+	// ...and unless there are a few chunks to be updated.
+	CellChunk new_cell_chunk = *cell_chunk;
+	new_cell_chunk.cells = malloc(new_cell_chunk.area * sizeof(Cell));
+	memcpy(new_cell_chunk.cells, cell_chunk->cells, new_cell_chunk.area * sizeof(Cell));
+
+	CellChunk* const front_cell_chunk = cell_chunk;
+	CellChunk* const back_cell_chunk = &(new_cell_chunk);
+
+	for (int32_t x = 0; x < cc_width; x++)
 	{
-		for (int32_t y = cell_chunk->height - 1; y >= 0; y--)
+		for (int32_t y = cc_height - 1; y >= 0; y--)
 		{
-			Cell* const cell = CellChunk_GetCell(cell_chunk, x, y);
-			CellOptions* const cell_opt = DotApp_GetCellOptions(Dot_DotApp, cell->id);
+			Cell* const cell = CellChunk_GetCell(front_cell_chunk, x, y);
+			CellOptions* const cell_opt =
+				DotApp_GetCellOptions(Dot_DotApp, cell->id);
 
 			if (cell_opt->should_update == false)
 			{
 				continue;
 			}
 
-			cell_opt->update_method(cell_chunk, cell, x, y);
+			cell_opt->update_method(back_cell_chunk, cell, x, y);
 		}
 	}
+
+	memcpy(front_cell_chunk->cells, back_cell_chunk->cells, new_cell_chunk.area * sizeof(Cell));
+	free(back_cell_chunk->cells);
 }
 
 void CellChunk_Render (CellChunk* cell_chunk)

@@ -35,6 +35,7 @@ int32_t main (int32_t argc, char** argv)
 void Main_Setup ()
 {
 	System_Init();
+	srand(System_GetTimeMS());
 
 	// Allocate global variables
 	Dot_DotApp = malloc(sizeof (DotApp));
@@ -52,7 +53,7 @@ void Main_Setup ()
 		NULL);
 
 	// Initialize cell chunk
-	CellChunk_Init(&(Dot_DotApp->cell_chunk), 64, 64);
+	CellChunk_Init(&(Dot_DotApp->cell_chunk), 128, 128);
 
 	// Initialize resource managers
 	ResManager_Init(&(Dot_DotApp->cell_opt_manager), 4, sizeof(CellOptions));

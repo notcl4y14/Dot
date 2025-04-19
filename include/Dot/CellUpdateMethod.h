@@ -6,6 +6,6 @@
 
 #include <stdint.h>
 
-uint32_t _CellUpdateMethod_Powder (CellChunk* cell_chunk, Cell* cell, uint32_t x, uint32_t y);
+uint32_t _CellUpdateMethod_Powder (CellChunk* cc_front, CellChunk* cc_back, Cell* cell, uint32_t x, uint32_t y);
 
 #endif

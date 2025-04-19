@@ -85,7 +85,7 @@ void CellChunk_Update (CellChunk* cell_chunk)
 				continue;
 			}
 
-			cell_opt->update_method(back_cell_chunk, cell, x, y);
+			cell_opt->update_method(front_cell_chunk, back_cell_chunk, cell, x, y);
 		}
 	}
 

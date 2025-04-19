@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-typedef uint32_t (*CellUpdateMethod) (CellChunk*, Cell*, uint32_t x, uint32_t y);
+typedef uint32_t (*CellUpdateMethod) (CellChunk*, CellChunk*, Cell*, uint32_t x, uint32_t y);
 
 struct         CellOptions;
 typedef struct CellOptions CellOptions;

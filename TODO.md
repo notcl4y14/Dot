@@ -20,7 +20,7 @@
 		+ [x] Create a resource manager struct and methods for it
 		+ [x] Yup, that's it, I suppose
 
-- [ ] Advancing cells
+- [x] Advancing cells
 	+ [x] Implement double-buffering for cell array
 	+ [ ] (OPTIONAL) Implement an option for each specific cell ID to be iterated either from top to bottom or from bottom to top
 	+ [ ] (OPTIONAL) Implement random cell colors
@@ -28,7 +28,7 @@
 - [ ] Optimizations
 	+ [ ] Implement cells' alive/dead or sleeping state
 		* [ ] Also make sure to make created cells to "wake up" their neighbor cells 
-	+ [ ] (IF NEEDED) Optimize rendering
+	+ [x] (IF NEEDED) Optimize rendering
 
 - [ ] (HARD) Larger cells
 	+ [ ] Implement file loading/saving for cell chunks and...

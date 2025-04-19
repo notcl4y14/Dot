@@ -4,10 +4,10 @@
 
 void SFMLApp_Create (SFMLApp* sfml)
 {
-	return;
+	sfml->rect = sfRectangleShape_create();
 }
 
 void SFMLApp_Delete (SFMLApp* sfml)
 {
-	return;
+	sfRectangleShape_destroy(sfml->rect);
 }

@@ -52,7 +52,7 @@ void Main_Setup ()
 		NULL);
 
 	// Initialize cell chunk
-	CellChunk_Init(&(Dot_DotApp->cell_chunk), 32, 32);
+	CellChunk_Init(&(Dot_DotApp->cell_chunk), 64, 64);
 
 	// Initialize resource managers
 	ResManager_Init(&(Dot_DotApp->cell_opt_manager), 4, sizeof(CellOptions));
@@ -230,14 +230,12 @@ void Main_Render ()
 
 	// Render CellBrush
 	{
-		sfRectangleShape* rect = sfRectangleShape_create();
+		sfRectangleShape* rect = Dot_SFMLApp->rect;
 		sfRectangleShape_setPosition(rect, (sfVector2f) {cellbrush_x * 4, cellbrush_y * 4});
 		sfRectangleShape_setSize(rect, (sfVector2f) {cellbrush_size * 4, cellbrush_size * 4});
 		sfRectangleShape_setFillColor(rect, (sfColor){255, 255, 255, 255 / 4});
 
 		sfRenderWindow_drawRectangleShape(sfml_window, rect, NULL);
-
-		sfRectangleShape_destroy(rect);
 	}
 
 	sfRenderWindow_display(sfml_window);

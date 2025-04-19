@@ -95,7 +95,8 @@ void CellChunk_Update (CellChunk* cell_chunk)
 
 void CellChunk_Render (CellChunk* cell_chunk)
 {
-	sfRectangleShape* sfml_rectangle = sfRectangleShape_create();
+	uint8_t canvas[cell_chunk->area * 4];
+	memset((uint8_t*)&canvas, 0, cell_chunk->area * 4);
 
 	for (int32_t i = 0; i < cell_chunk->area; i++)
 	{
@@ -108,14 +109,23 @@ void CellChunk_Render (CellChunk* cell_chunk)
 
 		if (cell->id == 1)
 		{
-			sfRectangleShape_setFillColor(sfml_rectangle, sfYellow);
+			canvas[i * 4] = 255;
+			canvas[i * 4 + 1] = 255;
+			canvas[i * 4 + 2] = 0;
+			canvas[i * 4 + 3] = 255;
 		}
-
-		sfRectangleShape_setPosition(sfml_rectangle, (sfVector2f) {i % cell_chunk->width * 4, i / cell_chunk->width * 4});
-		sfRectangleShape_setSize(sfml_rectangle, (sfVector2f) {4, 4});
-
-		sfRenderWindow_drawRectangleShape(Dot_SFMLApp->window, sfml_rectangle, NULL);
 	}
 
-	sfRectangleShape_destroy(sfml_rectangle);
+	sfIntRect rect = {0, 0, cell_chunk->width, cell_chunk->height};
+	sfImage* image = sfImage_createFromPixels(cell_chunk->width, cell_chunk->height, (uint8_t*)&canvas);
+	sfTexture* texture = sfTexture_createFromImage(image, &rect);
+	sfSprite* sprite = sfSprite_create();
+	sfSprite_setTexture(sprite, texture, false);
+	sfSprite_setScale(sprite, (sfVector2f) {4, 4});
+
+	sfRenderWindow_drawSprite(Dot_SFMLApp->window, sprite, NULL);
+
+	sfImage_destroy(image);
+	sfTexture_destroy(texture);
+	sfSprite_destroy(sprite);
 }

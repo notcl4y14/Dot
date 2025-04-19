@@ -10,6 +10,8 @@ struct SFMLApp
 {
 	sfRenderWindow* window;
 	sfEvent event;
+
+	sfRectangleShape* rect;
 };
 
 void SFMLApp_Create (SFMLApp* sfml);

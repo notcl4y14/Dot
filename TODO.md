@@ -21,7 +21,7 @@
 		+ [x] Yup, that's it, I suppose
 
 - [ ] Advancing cells
-	+ [ ] Implement double-buffering for cell array
+	+ [x] Implement double-buffering for cell array
 	+ [ ] (OPTIONAL) Implement an option for each specific cell ID to be iterated either from top to bottom or from bottom to top
 	+ [ ] (OPTIONAL) Implement random cell colors
 

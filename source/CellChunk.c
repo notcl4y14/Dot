@@ -35,6 +35,20 @@ void CellChunk_Init (CellChunk* cell_chunk, int32_t width, int32_t height)
 	cell_chunk->area = area;
 }
 
+void CellChunk_Clone (CellChunk* cell_chunk_to, CellChunk* cell_chunk_from)
+{
+	int32_t const size = cell_chunk_from->area * sizeof (Cell);
+	*cell_chunk_to = *cell_chunk_from;
+	cell_chunk_to->cells = malloc(size);
+	memcpy(cell_chunk_to->cells, cell_chunk_from->cells, size);
+}
+
+void CellChunk_CopyCells (CellChunk* cell_chunk_to, CellChunk* cell_chunk_from)
+{
+	int32_t const size = cell_chunk_from->area * sizeof (Cell);
+	memcpy(cell_chunk_to->cells, cell_chunk_from->cells, size);
+}
+
 inline Cell* CellChunk_GetCell (CellChunk* cell_chunk, int32_t x, int32_t y)
 {
 	return &(cell_chunk->cells[x + y * cell_chunk->width]);
@@ -53,8 +67,7 @@ void CellChunk_Update (CellChunk* cell_chunk)
 	// This kind of approach seems bad, unless the chunk is small...
 	// ...and unless there are a few chunks to be updated.
 	CellChunk new_cell_chunk = *cell_chunk;
-	new_cell_chunk.cells = malloc(new_cell_chunk.area * sizeof(Cell));
-	memcpy(new_cell_chunk.cells, cell_chunk->cells, new_cell_chunk.area * sizeof(Cell));
+	CellChunk_Clone(&(new_cell_chunk), cell_chunk);
 
 	CellChunk* const front_cell_chunk = cell_chunk;
 	CellChunk* const back_cell_chunk = &(new_cell_chunk);
@@ -76,8 +89,8 @@ void CellChunk_Update (CellChunk* cell_chunk)
 		}
 	}
 
-	memcpy(front_cell_chunk->cells, back_cell_chunk->cells, new_cell_chunk.area * sizeof(Cell));
-	free(back_cell_chunk->cells);
+	CellChunk_CopyCells(front_cell_chunk, back_cell_chunk);
+	CellChunk_Delete(back_cell_chunk);
 }
 
 void CellChunk_Render (CellChunk* cell_chunk)

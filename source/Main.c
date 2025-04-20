@@ -1,6 +1,7 @@
 #include <Dot/Main.h>
 #include <Dot/CellBrush.h>
 #include <Dot/CellChunk.h>
+#include <Dot/CellChunkArray.h>
 #include <Dot/CellOptions.h>
 #include <Dot/DotApp.h>
 #include <Dot/SFMLApp.h>
@@ -15,6 +16,9 @@
 
 DotApp* Dot_DotApp;
 SFMLApp* Dot_SFMLApp;
+
+CellChunkArray cc_arr;
+FILE* file_world;
 
 int32_t cellbrush_x = 0;
 int32_t cellbrush_y = 0;
@@ -53,7 +57,17 @@ void Main_Setup ()
 		NULL);
 
 	// Initialize cell chunk
-	CellChunk_Init(&(Dot_DotApp->cell_chunk), 128, 128);
+	// CellChunk_Init(&(Dot_DotApp->cell_chunk), 128, 128);
+	CellChunkArray_Create(&cc_arr);
+	file_world = fopen("../map.dotworld", "r");
+
+	// char buffer[4];
+	// fread(buffer, 4, 1, file_world);
+
+	// printf("%d\n", (int)buffer);
+
+	CellChunkArray_LoadFromFile(&cc_arr, file_world);
+	CellChunkArray_ReadChunk(&cc_arr, &Dot_DotApp->cell_chunk, 0, 0);
 
 	// Initialize resource managers
 	ResManager_Init(&(Dot_DotApp->cell_opt_manager), 4, sizeof(CellOptions));
@@ -103,6 +117,9 @@ void Main_Loop ()
 
 void Main_Quit ()
 {
+	fclose(file_world);
+	CellChunkArray_Delete(&cc_arr);
+
 	// Delete global variables
 	DotApp_Delete(Dot_DotApp);
 	SFMLApp_Delete(Dot_SFMLApp);

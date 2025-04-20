@@ -59,7 +59,8 @@ void Main_Setup ()
 	// Initialize cell chunk
 	// CellChunk_Init(&(Dot_DotApp->cell_chunk), 128, 128);
 	CellChunkArray_Create(&cc_arr);
-	file_world = fopen("../map.dotworld", "r");
+	file_world = fopen("path_to_dot_world_file", "r");
+	exit(1); // remove this
 
 	// char buffer[4];
 	// fread(buffer, 4, 1, file_world);
@@ -183,7 +184,7 @@ void Main_Update ()
 {
 	CellChunk* const cell_chunk = &(Dot_DotApp->cell_chunk);
 
-	CellChunk_Update(cell_chunk);
+	// CellChunk_Update(cell_chunk);
 
 	// Add sand cell each tick
 	// {

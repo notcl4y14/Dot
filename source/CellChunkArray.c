@@ -168,7 +168,7 @@ void CellChunkArray_ReadChunk (CellChunkArray* cc_arr, CellChunk* cell_chunk, in
 	cell_chunk->area = cc_arr->chunk_width * cc_arr->chunk_height;
 	cell_chunk->cells = malloc(cell_chunk->area * sizeof(Cell));
 	// pread(cc_arr->update_file, cell_chunk->cells, sizeof(int8_t) * cell_chunk->area, offset);
-	read_offset(cc_arr->update_file, cell_chunk->cells, sizeof(int8_t) * cell_chunk->area, offset);
+	read_offset(cc_arr->update_file, cell_chunk->cells, cell_chunk->area * sizeof(Cell), offset + 8);
 }
 CellChunk* CellChunkArray_GetLoadedChunk (CellChunkArray* cc_arr, int32_t x, int32_t y)
 {
